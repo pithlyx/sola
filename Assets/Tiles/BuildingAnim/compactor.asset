@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: compactor
+  m_EditorClassIdentifier: 
+  m_AnimatedSprites:
+  - {fileID: 6757974453231119001, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 3192780276937146101, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -7915452524578899099, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -7489981758518936636, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 6551063889399011014, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -2671343404135320610, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -3780561758753525584, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 4656402564349269678, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -7992407572367564266, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 3937840963029764173, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -8019945254467924079, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -9192175800887717855, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 2247346245234318945, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 3869499884165855687, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 1913801579337641464, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -4507949710260436754, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -2772427777378808800, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 1950637716991699178, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: -5011918774048610875, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  - {fileID: 8311400945902057692, guid: aa3354c1ef0c1f34ead0125d55667b7a, type: 3}
+  m_MinSpeed: 5
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

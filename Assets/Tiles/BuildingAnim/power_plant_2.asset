@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: power_plant_2
+  m_EditorClassIdentifier: 
+  m_AnimatedSprites:
+  - {fileID: -4624991154816302953, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  - {fileID: -6632469697326752965, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  - {fileID: 6102460802449509141, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  - {fileID: -8904360664540253055, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  - {fileID: 5843030102867407444, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  - {fileID: -1536955777238022259, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  - {fileID: -7361645130921571041, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  - {fileID: 600931276446556479, guid: bd53143beca13c14fb6eab6ebad4f088, type: 3}
+  m_MinSpeed: 5
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

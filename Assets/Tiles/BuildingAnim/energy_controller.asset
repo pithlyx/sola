@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: energy_controller
+  m_EditorClassIdentifier: 
+  m_AnimatedSprites:
+  - {fileID: -1856561100586240016, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  - {fileID: 2301462905485769883, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  - {fileID: 3900395899418852262, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  - {fileID: -4492670414888067450, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  - {fileID: -2036804403865985943, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  - {fileID: 531729739195276897, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  - {fileID: -581233065044117895, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  - {fileID: 3231203130593241945, guid: af3d08addfb320e4ea65502c33eca4a3, type: 3}
+  m_MinSpeed: 5
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0
