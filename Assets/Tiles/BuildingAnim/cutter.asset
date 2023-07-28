@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: cutter
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: -1510969794081196146, guid: dd0ec9da7eea1394e803b56d92ab3774, type: 3}
-  - {fileID: 6307747030715296928, guid: dd0ec9da7eea1394e803b56d92ab3774, type: 3}
-  - {fileID: 1186353588931106035, guid: dd0ec9da7eea1394e803b56d92ab3774, type: 3}
-  - {fileID: -8796220164151468122, guid: dd0ec9da7eea1394e803b56d92ab3774, type: 3}
+  - {fileID: -1214093847900345671, guid: 45b93d6bed6625b45948aedaa5280eb7, type: 3}
+  - {fileID: 7000881080209571099, guid: 45b93d6bed6625b45948aedaa5280eb7, type: 3}
+  - {fileID: -1270767575985737518, guid: 45b93d6bed6625b45948aedaa5280eb7, type: 3}
+  - {fileID: -5473198680464279779, guid: 45b93d6bed6625b45948aedaa5280eb7, type: 3}
   m_MinSpeed: 5
   m_MaxSpeed: 5
   m_AnimationStartTime: 0

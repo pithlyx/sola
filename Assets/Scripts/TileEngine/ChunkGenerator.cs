@@ -18,6 +18,7 @@ public class Threshold
 public class ChunkGenerator : MonoBehaviour
 {
     public Layer[] Layers; // Define your layers here
+    public bool random; // Should we apply "random" rotation to each tile?
 
     public TileBase GetTileBaseFromThreshold(float noiseValue, Threshold[] thresholds)
     {
@@ -78,11 +79,7 @@ public class ChunkGenerator : MonoBehaviour
                 TileBase tileBase = GetTileBaseFromThreshold(averageNoise, thresholds);
 
                 // Create a new tile with this TileBase
-                Tile tile = new Tile();
-                tile.TileBase = tileBase;
-
-                // Add the tile to the chunk
-                chunk.Tiles[x, y] = tile;
+                chunk.SetTile(x, y, tileBase, random, averageNoise);
             }
         }
 

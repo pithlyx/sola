@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: furnace
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: -3755146298687939659, guid: 1a10f5d67493b894bb77084364e2de53, type: 3}
-  - {fileID: -3395265321896800421, guid: 1a10f5d67493b894bb77084364e2de53, type: 3}
-  - {fileID: -8793357545666085602, guid: 1a10f5d67493b894bb77084364e2de53, type: 3}
-  - {fileID: 2154683197474795509, guid: 1a10f5d67493b894bb77084364e2de53, type: 3}
+  - {fileID: -9210460774835628992, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
+  - {fileID: 4894563460488712663, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
+  - {fileID: 2164054037676379880, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
+  - {fileID: 2614368664920080066, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
   m_MinSpeed: 5
   m_MaxSpeed: 5
   m_AnimationStartTime: 0

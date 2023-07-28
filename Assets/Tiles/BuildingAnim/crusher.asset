@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: crusher
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: -5156143799113175397, guid: a51455baa3b8c2f4f8d553cc7b529005, type: 3}
-  - {fileID: -4378312499162687976, guid: a51455baa3b8c2f4f8d553cc7b529005, type: 3}
-  - {fileID: -8642068112602940141, guid: a51455baa3b8c2f4f8d553cc7b529005, type: 3}
+  - {fileID: -5180057774095294567, guid: 9b114ae2cb3a2ad4daed06fc8d4d0974, type: 3}
+  - {fileID: 4222824344797415197, guid: 9b114ae2cb3a2ad4daed06fc8d4d0974, type: 3}
+  - {fileID: 1366298335302895850, guid: 9b114ae2cb3a2ad4daed06fc8d4d0974, type: 3}
   m_MinSpeed: 5
   m_MaxSpeed: 5
   m_AnimationStartTime: 0

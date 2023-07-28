@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: hub
+  m_EditorClassIdentifier: 
+  m_AnimatedSprites:
+  - {fileID: 9092499492318183364, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  - {fileID: -7249124146886625863, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  - {fileID: 4170245859172066959, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  - {fileID: 6058959894957620036, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  - {fileID: -550796294246943189, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  - {fileID: 7769922317796521751, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  - {fileID: 4057207545039698535, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  - {fileID: -2471566395070224453, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+  m_MinSpeed: 5
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

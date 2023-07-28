@@ -27,19 +27,7 @@ public class CameraController : MonoBehaviour
 
     private Vector3 dragOrigin;
     private Vector2Int currentChunkPosition;
-    private BuildingHandler buildingHandler;
-    private TileBase selectedTile;
 
-    void Start()
-    {
-        buildingHandler = GetComponent<BuildingHandler>();
-        if (buildingHandler == null)
-        {
-            Debug.LogError(
-                "CameraController requires a BuildingHandler component on the same GameObject"
-            );
-        }
-    }
 
     void Update()
     {
@@ -48,7 +36,6 @@ public class CameraController : MonoBehaviour
 
     void Movement()
     {
-        selectedTile = buildingHandler.selectedTile;
         Vector3 moveDirection = Vector3.zero;
 
         if (Input.GetKey(hotkeys.upKey))
@@ -70,20 +57,6 @@ public class CameraController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             moveDirection *= speedMult;
-        }
-        if (selectedTile == null)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                dragOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            }
-
-            if (Input.GetMouseButton(0))
-            {
-                Vector3 difference =
-                    dragOrigin - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                transform.position += difference * dragSpeed * Time.deltaTime;
-            }
         }
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");

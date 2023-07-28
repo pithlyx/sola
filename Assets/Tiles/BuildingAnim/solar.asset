@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: solar
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: -2196774334650002303, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
-  - {fileID: 7118013779072399326, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
-  - {fileID: 251986823082060827, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
-  - {fileID: 7037844426036189963, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
-  - {fileID: -840831392750218979, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
-  - {fileID: -1090517333680967145, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
-  - {fileID: 6146854603183905821, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
-  - {fileID: -3091019217969695886, guid: 798da7b1613221f46a296d6da98b18bf, type: 3}
+  - {fileID: 2044981646058702676, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
+  - {fileID: 7893809357038427363, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
+  - {fileID: 5535911928552115603, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
+  - {fileID: 9096028284556289579, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
+  - {fileID: -2689943619411764853, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
+  - {fileID: 5161854582814633755, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
+  - {fileID: -1451279406941465278, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
+  - {fileID: 2111969594396351165, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
   m_MinSpeed: 5
   m_MaxSpeed: 5
   m_AnimationStartTime: 0
