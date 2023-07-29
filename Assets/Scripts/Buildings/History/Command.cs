@@ -18,7 +18,14 @@ public class AddBuildingCommand : Command
     private BuildingManager buildingManager;
     private int id;
 
-    public AddBuildingCommand(Vector3Int position, Building building, GameObject instance, BuildingManager buildingManager, int id, Tilemap buildingsTilemap)
+    public AddBuildingCommand(
+        Vector3Int position,
+        Building building,
+        GameObject instance,
+        BuildingManager buildingManager,
+        int id,
+        Tilemap buildingsTilemap
+    )
     {
         this.position = position;
         this.tile = building.GetState();
@@ -29,12 +36,10 @@ public class AddBuildingCommand : Command
         this.id = id;
     }
 
-
-
     public override void Execute()
     {
         buildingsTilemap.SetTile(position, tile);
-        buildingManager.AddBuilding(position, building, instance, id);
+        buildingManager.AddBuilding(position, building, instance, id); // Modify this line
     }
 
     public override void Unexecute()
@@ -52,7 +57,12 @@ public class RemoveBuildingCommand : Command
     private Tilemap buildingsTilemap;
     private BuildingManager buildingManager;
 
-    public RemoveBuildingCommand(Vector3Int position, BuildingManager.BuildingInfo buildingInfo, Tilemap buildingsTilemap, BuildingManager buildingManager)
+    public RemoveBuildingCommand(
+        Vector3Int position,
+        BuildingManager.BuildingInfo buildingInfo,
+        Tilemap buildingsTilemap,
+        BuildingManager buildingManager
+    )
     {
         this.position = position;
         this.buildingInfo = buildingInfo;
@@ -71,8 +81,17 @@ public class RemoveBuildingCommand : Command
     {
         TileBase activeTile = buildingInfo.PrefabType.GetState();
         buildingsTilemap.SetTile(position, activeTile);
-        Building newBuilding = Object.Instantiate(buildingInfo.PrefabType, position, Quaternion.identity);
-        buildingManager.AddBuilding(position, buildingInfo.PrefabType, newBuilding.gameObject, buildingInfo.Id);
+        Building newBuilding = Object.Instantiate(
+            buildingInfo.PrefabType,
+            position,
+            Quaternion.identity
+        );
+        buildingManager.AddBuilding(
+            position,
+            buildingInfo.PrefabType,
+            newBuilding.gameObject,
+            buildingInfo.Id
+        );
     }
 }
 

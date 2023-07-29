@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -10,7 +11,11 @@ public class BuildingManager : MonoBehaviour
         public int Id;
     }
 
-    public Dictionary<Vector3Int, BuildingInfo> buildings = new Dictionary<Vector3Int, BuildingInfo>();
+    public Dictionary<Vector3Int, BuildingInfo> buildings =
+        new Dictionary<Vector3Int, BuildingInfo>();
+
+    // Reference to BuildingHandler
+    public BuildingHandler buildingHandler;
 
     public void AddBuilding(Vector3Int position, Building prefabType, GameObject instance, int id)
     {
@@ -37,5 +42,27 @@ public class BuildingManager : MonoBehaviour
     public void RemoveBuilding(Vector3Int position)
     {
         buildings.Remove(position);
+    }
+
+    private void Update()
+    {
+        UpdateBuildingStates();
+    }
+
+    private void UpdateBuildingStates()
+    {
+        foreach (KeyValuePair<Vector3Int, BuildingInfo> entry in buildings)
+        {
+            Building building = entry.Value.Instance.GetComponent<Building>();
+            if (building != null)
+            {
+                TileBase tile = building.GetState();
+                buildingHandler.buildingsTilemap.SetTile(entry.Key, tile);
+                buildingHandler.buildingsTilemap.SetTransformMatrix(
+                    entry.Key,
+                    building.rotationMatrix
+                );
+            }
+        }
     }
 }
