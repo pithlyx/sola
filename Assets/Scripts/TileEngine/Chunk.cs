@@ -25,24 +25,11 @@ public class Chunk
         }
     }
 
-    public void SetTile(int x, int y, TileBase tileBase, bool random, float noise)
+    public void SetTile(int x, int y, TileBase tileBase)
     {
         TileData tileData;
         tileData.tileBase = tileBase;
-
-        // If the "random" rotation should be applied, set the transform matrix
-        if (random)
-        {
-            // Scale and round the noise value to get a rotation index from 0 to 3
-            int rotationIndex = Mathf.RoundToInt(noise * 3);
-
-            float rotationDegrees = rotationIndex * -90f;
-            tileData.transformMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, rotationDegrees));
-        }
-        else
-        {
-            tileData.transformMatrix = Matrix4x4.identity;
-        }
+        tileData.transformMatrix = Matrix4x4.identity;
 
         Tiles[x, y] = tileData;
     }

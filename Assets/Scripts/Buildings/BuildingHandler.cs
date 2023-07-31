@@ -1,289 +1,106 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.Tilemaps;
 
 public class BuildingHandler : MonoBehaviour
 {
-    public Tilemap overlayTilemap;
-    public Tilemap buildingsTilemap;
+    private BuildingManager buildingManager; // Reference to the BuildingManager
+    private IPlacementLogic currentPlacementLogic; // Reference to the current placement logic
+    public Vector2 CursorPosition; // Public variable to store the cursor position
+    public BuildingDatabase.BuildingData selectedBuilding; // Public variable to store the currently selected building
+    public Building selectedBuildingObject; // Public variable to store the currently selected building GameObject
 
-    [SerializeField]
-    private List<BuildingGroup> buildingGroups;
-
-    [SerializeField]
-    private KeyCode RotateHotkey = KeyCode.R;
-
-    [SerializeField]
-    private KeyCode PickerHotkey = KeyCode.Q;
-
-    private Building selectedBuilding;
-    private Vector3Int lastMousePosition;
-    private Vector3Int lastPlacementPosition = new Vector3Int(
-        int.MinValue,
-        int.MinValue,
-        int.MinValue
-    );
-    private BuildingManager buildingManager;
-    private HistoryManager historyManager;
-    private BatchCommand currentBatchCommand;
-    private int relativeRotationIndex = 0;
-    private Dictionary<string, int> buildingCounts = new Dictionary<string, int>();
-
-    private void Awake()
+    private void Start()
     {
-        buildingManager = GetComponent<BuildingManager>();
-        historyManager = GetComponent<HistoryManager>();
+        buildingManager = GetComponent<BuildingManager>(); // Get the BuildingManager component
+        if (buildingManager == null) // Check if BuildingManager was found
+            Debug.LogError("No BuildingManager found on the same game object");
+        currentPlacementLogic = new DefaultPlacementLogic(); // Set the default placement logic
     }
 
     private void Update()
     {
-        HandleHotKeys();
-        TrackOverlay();
-        HandleBuildingPlacement();
-        HandleBuildingRemoval();
-        HandleBatchCommandEnd();
-        HandleUndoAction();
-    }
+        // Update the cursor position
+        CursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-    private void HandleHotKeys()
-    {
-        SelectBuildingGroup();
-        RotateBuilding();
-        PickBuilding();
-    }
+        // Convert the cursor position to a Vector3Int
+        Vector3Int cursorPos = Vector3Int.FloorToInt(CursorPosition);
 
-    private void HandleBuildingPlacement()
-    {
-        StartBatchCommandIfApplicable();
-        PlaceBuilding();
-    }
+        // Display the currently selected building at the cursor position
+        currentPlacementLogic.DisplayBuildingAtCursor(
+            this,
+            cursorPos,
+            buildingManager.buildingDatabase,
+            buildingManager.overlayLayer
+        );
 
-    private void HandleBuildingRemoval()
-    {
-        StartBatchCommandIfApplicable();
-        RemoveBuilding();
-    }
-
-    private void SelectBuildingGroup()
-    {
-        foreach (BuildingGroup buildingGroup in buildingGroups)
+        // Listen for each building group's hotkey
+        foreach (
+            BuildingDatabase.BuildingGroupHotkey groupHotkey in buildingManager
+                .buildingDatabase
+                .groupHotkeys
+        )
         {
-            if (Input.GetKeyDown(buildingGroup.Hotkey))
+            if (Input.GetKeyDown(groupHotkey.hotkey))
             {
-                if (selectedBuilding != null && buildingGroup.Buildings.Contains(selectedBuilding))
-                {
-                    buildingGroup.NextBuilding();
-                }
-                selectedBuilding = buildingGroup.GetCurrentBuilding();
-                selectedBuilding.Rotate(relativeRotationIndex);
+                // If the hotkey is pressed, select the next building in the group
+                SelectBuilding(groupHotkey.group);
             }
         }
     }
 
-    private void RotateBuilding()
+    public void SelectBuilding(BuildingDatabase.BuildingGroup group)
     {
-        if (selectedBuilding != null && Input.GetKeyDown(RotateHotkey))
-        {
-            relativeRotationIndex = (relativeRotationIndex + 1) % 4;
-            selectedBuilding.Rotate(relativeRotationIndex);
-            overlayTilemap.SetTransformMatrix(lastMousePosition, selectedBuilding.rotationMatrix);
-        }
-    }
+        List<BuildingDatabase.BuildingData> buildingsInGroup =
+            buildingManager.buildingDatabase.GetBuildingsByGroup(group); // Get the buildings in the group
 
-    private void TrackOverlay()
-    {
-        if (selectedBuilding == null)
+        // Check if there are any buildings in the group
+        if (buildingsInGroup.Count == 0)
+        {
+            Debug.Log("No buildings in the selected group");
             return;
-
-        Vector3Int mousePosition = GetMousePosition();
-        if (mousePosition != lastMousePosition)
-        {
-            overlayTilemap.SetTile(lastMousePosition, null);
-            overlayTilemap.SetTransformMatrix(lastMousePosition, Matrix4x4.identity);
         }
 
-        TileBase activeTile = selectedBuilding.GetState();
-        overlayTilemap.SetTile(mousePosition, activeTile);
-        overlayTilemap.SetTransformMatrix(mousePosition, selectedBuilding.rotationMatrix);
-        lastMousePosition = mousePosition;
+        int currentIndex = buildingsInGroup.IndexOf(selectedBuilding); // Find the index of the selected building
+        int nextIndex = (currentIndex + 1) % buildingsInGroup.Count; // Calculate the index of the next building
 
-        if (Input.GetMouseButtonDown(1))
+        if (buildingsInGroup[nextIndex].name == selectedBuilding.name) // Check if the next building is the same
         {
-            ClearSelected();
-        }
-    }
-
-    private void ClearSelected()
-    {
-        if (selectedBuilding == null)
+            Debug.Log("No New Building");
             return;
-
-        Vector3Int mousePosition = GetMousePosition();
-        overlayTilemap.SetTile(mousePosition, null);
-        selectedBuilding = null;
-        relativeRotationIndex = 0;
-    }
-
-    private void StartBatchCommandIfApplicable()
-    {
-        if (
-            currentBatchCommand == null
-            && (
-                (selectedBuilding != null && Input.GetMouseButtonDown(0))
-                || (selectedBuilding == null && Input.GetMouseButtonDown(1))
-            )
-        )
-        {
-            currentBatchCommand = new BatchCommand();
-        }
-    }
-
-    private void PlaceBuilding()
-    {
-        if (selectedBuilding == null || !Input.GetMouseButton(0))
-            return;
-
-        Vector3Int mousePosition = GetMousePosition();
-        if (
-            mousePosition == lastPlacementPosition
-            || buildingManager.GetBuildingInfo(mousePosition).Instance != null
-        )
-            return;
-
-        lastPlacementPosition = mousePosition;
-
-        TileBase activeTile = selectedBuilding.GetState();
-        buildingsTilemap.SetTile(mousePosition, activeTile);
-        buildingsTilemap.SetTransformMatrix(mousePosition, selectedBuilding.rotationMatrix);
-
-        Transform containerTransform = transform.Find($"{selectedBuilding.name}s");
-        if (containerTransform == null)
-        {
-            GameObject newContainer = new GameObject($"{selectedBuilding.name}s");
-            newContainer.transform.parent = transform;
-            containerTransform = newContainer.transform;
         }
 
-        int buildingId = buildingCounts.TryGetValue(selectedBuilding.name, out int count)
-            ? count
-            : 0;
-        buildingCounts[selectedBuilding.name] = buildingId + 1;
+        if (selectedBuildingObject != null) // Check if there is a selected building GameObject
+            Destroy(selectedBuildingObject.gameObject); // Destroy the old selected building GameObject
 
-        Vector3 placementPosition = buildingsTilemap.GetCellCenterWorld(mousePosition);
-        Building newBuilding = Instantiate(
+        selectedBuilding = buildingsInGroup[nextIndex]; // Select the next building
+        selectedBuildingObject = buildingManager.CreateBuildingGameObject(
             selectedBuilding,
-            placementPosition,
-            Quaternion.Euler(0, 0, -90 * relativeRotationIndex),
-            containerTransform
-        );
-        newBuilding.name = $"{selectedBuilding.name}{buildingId}";
-
-        buildingManager.AddBuilding(
-            mousePosition,
-            selectedBuilding,
-            newBuilding.gameObject,
-            buildingId
-        );
-
-        if (currentBatchCommand != null)
-        {
-            currentBatchCommand.AddCommand(
-                new AddBuildingCommand(
-                    mousePosition,
-                    selectedBuilding,
-                    newBuilding.gameObject,
-                    buildingManager,
-                    buildingId,
-                    buildingsTilemap
-                )
-            );
-        }
+            nextIndex
+        ); // Create a new GameObject for the selected building
+        Debug.Log("Selected building: " + selectedBuilding.name); // Log the selected building
     }
 
-    private void RemoveBuilding()
-    {
-        if (selectedBuilding != null || !Input.GetMouseButton(1))
-            return;
+    // public void SetTileWithRotation(
+    //     Vector3Int position,
+    //     TileBase tileBase,
+    //     Matrix4x4 rotationMatrix
+    // )
+    // {
+    //     // Create a new tilebase from the tileBase
+    //     TileBase tile = Instantiate(tileBase) as Tile;
 
-        Vector3Int mousePosition = GetMousePosition();
-        BuildingManager.BuildingInfo buildingInfo = buildingManager.GetBuildingInfo(mousePosition);
-        if (buildingInfo.Instance == null)
-            return;
+    //     if (tile == null)
+    //     {
+    //         Debug.LogError("Failed to create a new tile from the provided tileBase");
+    //         return;
+    //     }
 
-        Destroy(buildingInfo.Instance);
-        buildingsTilemap.SetTile(mousePosition, null);
-        buildingManager.RemoveBuilding(mousePosition);
+    //     // Apply the rotation to the tile's transform
+    //     tile.transform = rotationMatrix;
 
-        if (currentBatchCommand != null)
-        {
-            currentBatchCommand.AddCommand(
-                new RemoveBuildingCommand(
-                    mousePosition,
-                    buildingInfo,
-                    buildingsTilemap,
-                    buildingManager
-                )
-            );
-        }
-    }
-
-    private void HandleBatchCommandEnd()
-    {
-        if (
-            (selectedBuilding != null && Input.GetMouseButtonUp(0))
-            || (selectedBuilding == null && Input.GetMouseButtonUp(1))
-        )
-        {
-            if (currentBatchCommand != null)
-            {
-                historyManager.AddAndExecute(currentBatchCommand);
-                currentBatchCommand = null;
-            }
-        }
-    }
-
-    private void HandleUndoAction()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            historyManager.Undo();
-        }
-    }
-
-    private void PickBuilding()
-    {
-        if (!Input.GetKeyDown(PickerHotkey))
-            return;
-
-        Vector3Int mousePosition = GetMousePosition();
-        TileBase tileUnderMouse = buildingsTilemap.GetTile(mousePosition);
-        if (tileUnderMouse == null)
-            return;
-
-        foreach (BuildingGroup buildingGroup in buildingGroups)
-        {
-            Building building = buildingGroup.GetBuildingByTileBase(tileUnderMouse);
-            if (building == null)
-                continue;
-
-            // Get the rotation index from the building that's already placed on the map
-            BuildingManager.BuildingInfo buildingInfo = buildingManager.GetBuildingInfo(
-                mousePosition
-            );
-            Building placedBuilding = buildingInfo.Instance.GetComponent<Building>();
-            int rotationIndex = placedBuilding.RotationIndex;
-
-            // Set the selected building
-            selectedBuilding = buildingGroup.SelectBuilding(building);
-            selectedBuilding.Rotate(rotationIndex);
-            relativeRotationIndex = rotationIndex;
-            break;
-        }
-    }
-
-    private Vector3Int GetMousePosition()
-    {
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        return overlayTilemap.WorldToCell(worldPosition);
-    }
+    //     // Set the tile at the position on the overlay layer
+    //     buildingManager.overlayLayer.SetTile(position, tile);
+    // }
 }

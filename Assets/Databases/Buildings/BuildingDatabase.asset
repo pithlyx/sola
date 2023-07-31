@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e2984bcb79b2f84babcc196fd818943, type: 3}
+  m_Name: BuildingDatabase
+  m_EditorClassIdentifier: 
+  allBuildings:
+  - name: Conv0
+    group: 1
+    buildingPrefab: {fileID: -2176780046952611541, guid: 8c34c0a9edabe9e4c8ca08802b24de9b, type: 3}
+    StaticTile: {fileID: 11400000, guid: 7d76bd68ce29d8f49921f6f92d8bfc66, type: 2}
+    AnimTile: {fileID: 11400000, guid: 1b05a5f16952fe34f99f4958d896da8c, type: 2}
+    Icon: {fileID: -3645457184889840044, guid: 56568e33b7ca78c4eb7ef411155f102c, type: 3}
+    levels:
+    - operationRate: 10
+      craftableItems: []
+      buildCost: []
+      requiresFuel: 0
+      fuelRequired: {fileID: 0}
+      maxStock: 0
+      fuelStock: 0
+      operationCost: 0
+    canRotate: 1
+    defaultRotationIndex: 0
+    inOuts:
+    - direction: 1
+      flow: 0
+      item: {fileID: 0}
+    - direction: 3
+      flow: 1
+      item: {fileID: 0}
+  - name: Mine
+    group: 0
+    buildingPrefab: {fileID: -5440449108203148797, guid: 900a37d689aad204cba0904271ea07ee, type: 3}
+    StaticTile: {fileID: 11400000, guid: e43df50f17589dc41b8015df7fa7c0a7, type: 2}
+    AnimTile: {fileID: 11400000, guid: 91650b255f97e5d4baec182ac9e77bdc, type: 2}
+    Icon: {fileID: -1028078837742000520, guid: f88be10b0631b764e909d85e69328ca3, type: 3}
+    levels:
+    - operationRate: 10
+      craftableItems:
+      - {fileID: 11400000, guid: 289479612ffa6d142b89b20c5e3a2964, type: 2}
+      - {fileID: 11400000, guid: 1c5890f72950c31438aeb3030f32bfdf, type: 2}
+      - {fileID: 11400000, guid: 25a89037162d88f4c9e6ce1cb10f4ea6, type: 2}
+      buildCost: []
+      requiresFuel: 0
+      fuelRequired: {fileID: 0}
+      maxStock: 0
+      fuelStock: 0
+      operationCost: 0
+    canRotate: 1
+    defaultRotationIndex: 0
+    inOuts:
+    - direction: 0
+      flow: 1
+      item: {fileID: 0}
+    - direction: 0
+      flow: 1
+      item: {fileID: 0}
+    - direction: 0
+      flow: 1
+      item: {fileID: 0}
+    - direction: 0
+      flow: 1
+      item: {fileID: 0}
+  - name: Furnace
+    group: 2
+    buildingPrefab: {fileID: -8705247072445489868, guid: b0a9b60c08cbdae4986536dbffd05430, type: 3}
+    StaticTile: {fileID: 11400000, guid: 558f3dc43a9b9c34b853499871c8d2a9, type: 2}
+    AnimTile: {fileID: 11400000, guid: 6eb18fe4923b80a4ca8fc46e104a0c06, type: 2}
+    Icon: {fileID: -9210460774835628992, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
+    levels:
+    - operationRate: 5
+      craftableItems:
+      - {fileID: 11400000, guid: 2cc891357318c33499fac6a14a13d7c0, type: 2}
+      buildCost: []
+      requiresFuel: 1
+      fuelRequired: {fileID: 11400000, guid: 289479612ffa6d142b89b20c5e3a2964, type: 2}
+      maxStock: 100
+      fuelStock: 0
+      operationCost: 2
+    canRotate: 1
+    defaultRotationIndex: 0
+    inOuts:
+    - direction: 0
+      flow: 0
+      item: {fileID: 0}
+    - direction: 1
+      flow: 0
+      item: {fileID: 0}
+    - direction: 2
+      flow: 0
+      item: {fileID: 0}
+    - direction: 3
+      flow: 1
+      item: {fileID: 0}
+  - name: Pump
+    group: 0
+    buildingPrefab: {fileID: 6984287602380930607, guid: 72b94c46765ed104f841f4801a38a9a2, type: 3}
+    StaticTile: {fileID: 11400000, guid: e3e424272ea720d43b1576ed40723c8e, type: 2}
+    AnimTile: {fileID: 11400000, guid: eefcef30fb751d34cabdf25fcb5ba313, type: 2}
+    Icon: {fileID: -146330342605342123, guid: 10763d2b246d7f04298c012d7135080c, type: 3}
+    levels:
+    - operationRate: 10
+      craftableItems:
+      - {fileID: 11400000, guid: c60ba2a8db93bdf429c781de76331f05, type: 2}
+      buildCost: []
+      requiresFuel: 0
+      fuelRequired: {fileID: 0}
+      maxStock: 0
+      fuelStock: 0
+      operationCost: 0
+    canRotate: 1
+    defaultRotationIndex: 0
+    inOuts:
+    - direction: 0
+      flow: 1
+      item: {fileID: 0}
+    - direction: 1
+      flow: 1
+      item: {fileID: 0}
+    - direction: 2
+      flow: 1
+      item: {fileID: 0}
+    - direction: 3
+      flow: 1
+      item: {fileID: 0}
+  groupHotkeys:
+  - group: 1
+    hotkey: 49
+  - group: 0
+    hotkey: 50
+  - group: 2
+    hotkey: 51
+  - group: 7
+    hotkey: 52

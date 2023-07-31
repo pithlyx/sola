@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e40656784b8bcae45930211011e4b084, type: 3}
+  m_Name: Water
+  m_EditorClassIdentifier: 
+  resourceName: Water
+  icon: {fileID: 1332728659, guid: 3ee81c79cdf271940b7bd78de4ebe092, type: 3}
+  tile: {fileID: 11400000, guid: ac1844c9c682ddc4dbd8b79e489631b1, type: 2}
+  description: 
+  thresholds:
+  - Layer: 0
+    Threshold: -1

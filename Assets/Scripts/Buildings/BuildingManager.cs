@@ -1,68 +1,36 @@
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 public class BuildingManager : MonoBehaviour
 {
-    public struct BuildingInfo
+    public BuildingDatabase buildingDatabase;
+    public Tilemap buildingLayer;
+    public Tilemap overlayLayer;
+    public ChunkGenerator chunkGenerator;
+    public Dictionary<BuildingDatabase.BuildingGroup, GameObject> buildingGroupGameObjects =
+        new Dictionary<BuildingDatabase.BuildingGroup, GameObject>(); // Dictionary to store group GameObjects
+    private List<Building> buildings = new List<Building>(); // List to store all the buildings
+
+    public Building CreateBuildingGameObject(
+        BuildingDatabase.BuildingData buildingData,
+        int buildingIndex
+    )
     {
-        public Building PrefabType;
-        public GameObject Instance;
-        public int Id;
-    }
-
-    public Dictionary<Vector3Int, BuildingInfo> buildings =
-        new Dictionary<Vector3Int, BuildingInfo>();
-
-    // Reference to BuildingHandler
-    public BuildingHandler buildingHandler;
-
-    public void AddBuilding(Vector3Int position, Building prefabType, GameObject instance, int id)
-    {
-        var buildingInfo = new BuildingInfo
+        if (!buildingGroupGameObjects.ContainsKey(buildingData.group)) // Check if group GameObject already exists
         {
-            PrefabType = prefabType,
-            Instance = instance,
-            Id = id
-        };
-
-        buildings[position] = buildingInfo;
-    }
-
-    public BuildingInfo GetBuildingInfo(Vector3Int position)
-    {
-        if (buildings.TryGetValue(position, out BuildingInfo buildingInfo))
-        {
-            return buildingInfo;
+            GameObject newGroupGameObject = new GameObject(buildingData.group.ToString()); // Create a new GameObject
+            newGroupGameObject.transform.parent = this.transform; // Set this GameObject as parent
+            buildingGroupGameObjects.Add(buildingData.group, newGroupGameObject); // Add new GameObject to the dictionary
         }
 
-        return default;
-    }
-
-    public void RemoveBuilding(Vector3Int position)
-    {
-        buildings.Remove(position);
-    }
-
-    private void Update()
-    {
-        UpdateBuildingStates();
-    }
-
-    private void UpdateBuildingStates()
-    {
-        foreach (KeyValuePair<Vector3Int, BuildingInfo> entry in buildings)
-        {
-            Building building = entry.Value.Instance.GetComponent<Building>();
-            if (building != null)
-            {
-                TileBase tile = building.GetState();
-                buildingHandler.buildingsTilemap.SetTile(entry.Key, tile);
-                buildingHandler.buildingsTilemap.SetTransformMatrix(
-                    entry.Key,
-                    building.rotationMatrix
-                );
-            }
-        }
+        GameObject groupGameObject = buildingGroupGameObjects[buildingData.group]; // Get the group GameObject
+        Building newBuilding = buildingData.buildingPrefab.CreateBuilding(); // Instantiate a new Building from prefab
+        newBuilding.buildingData = buildingData; // Set the buildingData for the new Building
+        GameObject newBuildingGameObject = newBuilding.gameObject; // Get the GameObject of the new Building
+        newBuildingGameObject.transform.parent = groupGameObject.transform; // Set the group GameObject as parent
+        newBuildingGameObject.name = buildingData.name + "_" + buildingIndex; // Set the name of the GameObject
+        buildings.Add(newBuilding); // Add the new Building to the buildings list
+        return newBuilding; // Return the new Building
     }
 }
