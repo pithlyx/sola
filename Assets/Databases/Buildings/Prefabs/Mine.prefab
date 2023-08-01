@@ -65,7 +65,7 @@ MonoBehaviour:
   inOuts:
   - direction: 0
     flow: 1
-    item: {fileID: 0}
+    item: {fileID: 11400000, guid: 25a89037162d88f4c9e6ce1cb10f4ea6, type: 2}
   - direction: 1
     flow: 1
     item: {fileID: 0}

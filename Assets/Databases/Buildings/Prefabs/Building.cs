@@ -68,17 +68,11 @@ public abstract class Building : MonoBehaviour
         return newBuilding;
     }
 
-    public virtual void PlaceBuilding(int worldX, int worldY, params object[] optionalParams)
-    {
-        // Set the location of the building
-        this.BuildingSettings.Location = new Vector2Int(worldX, worldY);
-    }
-
     // Method to connect an adjacent building
     public virtual CraftableItem ConnectBuilding(Building adjacentBuilding)
     {
         // Calculate relative position of the adjacent building
-        Vector2Int relativePos =
+        Vector3Int relativePos =
             adjacentBuilding.BuildingSettings.Location - this.BuildingSettings.Location;
 
         // Check if the adjacent building is indeed adjacent
@@ -90,13 +84,13 @@ public abstract class Building : MonoBehaviour
 
         // Determine the direction of the adjacent building
         Direction adjacentDirection;
-        if (relativePos == Vector2Int.up)
+        if (relativePos == Vector3Int.up)
             adjacentDirection = Direction.North;
-        else if (relativePos == Vector2Int.right)
+        else if (relativePos == Vector3Int.right)
             adjacentDirection = Direction.East;
-        else if (relativePos == Vector2Int.down)
+        else if (relativePos == Vector3Int.down)
             adjacentDirection = Direction.South;
-        else /* if (relativePos == Vector2Int.left) */
+        else /* if (relativePos == Vector3Int.left) */
             adjacentDirection = Direction.West;
 
         // Get the opposite direction
@@ -151,9 +145,9 @@ public abstract class Building : MonoBehaviour
         BuildingSettings.Active = false;
     }
 
-    public Vector2Int GetBuildingLocation()
+    public Vector3Int GetBuildingLocation()
     {
-        return BuildingSettings.Location;
+        return Vector3Int.FloorToInt(transform.position);
     }
 
     public bool IsBuildingActive()
@@ -161,17 +155,27 @@ public abstract class Building : MonoBehaviour
         return BuildingSettings.Active;
     }
 
-    public int Rotate()
+    public int Rotate(int RotationIndex = 1, bool relative = true)
     {
-        return BuildingSettings.RotationIndex += 1;
+        if (relative)
+        {
+            return (
+                BuildingSettings.RotationIndex =
+                    (BuildingSettings.RotationIndex + RotationIndex) % 4
+            );
+        }
+        else
+        {
+            return (BuildingSettings.RotationIndex = RotationIndex % 4);
+        }
     }
 
-    public int GetBuildingRotation()
+    public int GetRotationIndex()
     {
         return BuildingSettings.RotationIndex;
     }
 
-    public Matrix4x4 GetBuildingRotationMatrix()
+    public Matrix4x4 GetRotationMatrix()
     {
         // return a matrix that rotates the building by the rotation index (0=0, 1=-90, 2=-180, 3=-270)
         return Matrix4x4.Rotate(Quaternion.Euler(0, 0, -90 * BuildingSettings.RotationIndex));
@@ -181,4 +185,11 @@ public abstract class Building : MonoBehaviour
     {
         return buildingData.group;
     }
+
+    public TileBase GetTile()
+    {
+        return BuildingSettings.Active ? buildingData.AnimTile : buildingData.StaticTile;
+    }
+
+    public virtual void OnPlaced(CraftableItem item = null) { }
 }

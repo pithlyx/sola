@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allBuildings:
   - name: Conv0
-    group: 1
+    group: 2
     buildingPrefab: {fileID: -2176780046952611541, guid: 8c34c0a9edabe9e4c8ca08802b24de9b, type: 3}
     StaticTile: {fileID: 11400000, guid: 7d76bd68ce29d8f49921f6f92d8bfc66, type: 2}
     AnimTile: {fileID: 11400000, guid: 1b05a5f16952fe34f99f4958d896da8c, type: 2}
@@ -38,7 +38,7 @@ MonoBehaviour:
       flow: 1
       item: {fileID: 0}
   - name: Mine
-    group: 0
+    group: 1
     buildingPrefab: {fileID: -5440449108203148797, guid: 900a37d689aad204cba0904271ea07ee, type: 3}
     StaticTile: {fileID: 11400000, guid: e43df50f17589dc41b8015df7fa7c0a7, type: 2}
     AnimTile: {fileID: 11400000, guid: 91650b255f97e5d4baec182ac9e77bdc, type: 2}
@@ -71,7 +71,7 @@ MonoBehaviour:
       flow: 1
       item: {fileID: 0}
   - name: Furnace
-    group: 2
+    group: 3
     buildingPrefab: {fileID: -8705247072445489868, guid: b0a9b60c08cbdae4986536dbffd05430, type: 3}
     StaticTile: {fileID: 11400000, guid: 558f3dc43a9b9c34b853499871c8d2a9, type: 2}
     AnimTile: {fileID: 11400000, guid: 6eb18fe4923b80a4ca8fc46e104a0c06, type: 2}
@@ -86,7 +86,7 @@ MonoBehaviour:
       maxStock: 100
       fuelStock: 0
       operationCost: 2
-    canRotate: 1
+    canRotate: 0
     defaultRotationIndex: 0
     inOuts:
     - direction: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
       flow: 1
       item: {fileID: 0}
   - name: Pump
-    group: 0
+    group: 1
     buildingPrefab: {fileID: 6984287602380930607, guid: 72b94c46765ed104f841f4801a38a9a2, type: 3}
     StaticTile: {fileID: 11400000, guid: e3e424272ea720d43b1576ed40723c8e, type: 2}
     AnimTile: {fileID: 11400000, guid: eefcef30fb751d34cabdf25fcb5ba313, type: 2}
@@ -133,11 +133,11 @@ MonoBehaviour:
       flow: 1
       item: {fileID: 0}
   groupHotkeys:
-  - group: 1
-    hotkey: 49
-  - group: 0
-    hotkey: 50
   - group: 2
+    hotkey: 49
+  - group: 1
+    hotkey: 50
+  - group: 3
     hotkey: 51
-  - group: 7
+  - group: 8
     hotkey: 52

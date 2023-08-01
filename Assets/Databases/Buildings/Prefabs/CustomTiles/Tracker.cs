@@ -78,19 +78,30 @@ public class TilemapTracker : MonoBehaviour
 
     private void DebugRotationIndex()
     {
-        Matrix4x4 matrix = tilemap.GetTransformMatrix(previousTilePosition);
-        Quaternion rotation = matrix.rotation;
-        float angle = rotation.eulerAngles.z;
+        // Get the tile at the current cursor position
+        Vector3Int currentTilePosition = tilemap.WorldToCell(
+            Camera.main.ScreenToWorldPoint(Input.mousePosition)
+        );
+        TileBase tile = tilemap.GetTile(currentTilePosition);
 
-        // Adjust for the offset
-        angle = (angle - 90f + 360f) % 360f;
+        if (tile != null)
+        {
+            // Get the tile's current rotation matrix
+            Matrix4x4 matrix = tilemap.GetTransformMatrix(currentTilePosition);
+            Quaternion rotation = matrix.rotation;
 
-        // Convert the angle to an index (0, 1, 2, 3)
-        int index = Mathf.RoundToInt(angle / 90f);
+            // Convert the rotation to an angle in degrees (0 to 360)
+            float rotationAngle = rotation.eulerAngles.z;
+            if (rotationAngle < 0)
+            {
+                rotationAngle += 360f;
+            }
 
-        // Adjust for clockwise rotation
-        index = (4 - index) % 4;
+            // Calculate the rotation index based on 90-degree offsets
+            int rotationIndex = Mathf.RoundToInt(rotationAngle / 90f) % 4;
 
-        Debug.Log("Rotation index: " + index);
+            // Output the rotation index to the console
+            Debug.Log("Rotation Index of Hovered Tile: " + rotationIndex);
+        }
     }
 }

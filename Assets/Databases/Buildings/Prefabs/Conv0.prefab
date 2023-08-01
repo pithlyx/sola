@@ -44,41 +44,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0f9326d482fe994981ad3a8dd9a6436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSettings:
-    buildingName: Conveyor 0
-    icon: {fileID: -3645457184889840044, guid: 56568e33b7ca78c4eb7ef411155f102c, type: 3}
-    Sprite: {fileID: 11400000, guid: 7d76bd68ce29d8f49921f6f92d8bfc66, type: 2}
-    Animated: {fileID: 11400000, guid: 1b05a5f16952fe34f99f4958d896da8c, type: 2}
-    Active: 1
-    rotationLocked: 0
-    defaultRotationIndex: 0
+  BuildingSettings:
+    Location: {x: 0, y: 0}
+    RotationLocked: 0
+    DefaultRotationIndex: 0
     RotationIndex: 0
-    rotationMatrix:
-      e00: 0
-      e01: 0
-      e02: -0
-      e03: 0
-      e10: 0
-      e11: 0
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: -0
-      e22: 0
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 0
+    Active: 1
+  buildingData:
+    name: 
+    group: 0
+    buildingPrefab: {fileID: 0}
+    StaticTile: {fileID: 0}
+    AnimTile: {fileID: 0}
+    Icon: {fileID: 0}
+    levels: []
+    canRotate: 0
+    defaultRotationIndex: 0
+    inOuts: []
   inOuts:
   - direction: 1
     flow: 0
-    itemType: 0
-    resource: {fileID: 0}
     item: {fileID: 0}
   - direction: 3
     flow: 1
-    itemType: 0
-    resource: {fileID: 0}
     item: {fileID: 0}
-  rate: 0

@@ -21,17 +21,8 @@ public class Mine : Building
         return newMine;
     }
 
-    public override void PlaceBuilding(int worldX, int worldY, params object[] optionalParams)
+    public override void OnPlaced(CraftableItem item)
     {
-        // Set the chunkGenerator for the new mine
-        this.chunkGenerator = optionalParams[0] as ChunkGenerator;
-
-        // Get the resource for the point
-        Resource resource = chunkGenerator.GetResourceForPoint(worldX, worldY, layerIndex);
-
-        // Get the CraftableItem that matches the resource
-        CraftableItem craftableItem = itemDatabase.GetItemByResource(resource);
-
         // Modify existing InOuts
         for (int i = 0; i < this.inOuts.Count; i++)
         {
@@ -42,7 +33,7 @@ public class Mine : Building
                 {
                     direction = this.inOuts[i].direction,
                     flow = this.inOuts[i].flow,
-                    item = craftableItem
+                    item = item
                 };
 
                 this.inOuts[i] = modifiedInOut;

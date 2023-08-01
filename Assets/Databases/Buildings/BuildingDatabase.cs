@@ -7,6 +7,7 @@ public class BuildingDatabase : ScriptableObject
 {
     public enum BuildingGroup
     {
+        None,
         Extractor,
         Conveyor,
         BasicCrafting,

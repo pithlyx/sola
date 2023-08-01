@@ -5,12 +5,7 @@ using UnityEngine.Tilemaps;
 
 public interface IPlacementLogic
 {
-    void DisplayBuildingAtCursor(
-        BuildingHandler handler,
-        Vector3Int cursorPos,
-        BuildingDatabase buildingDatabase,
-        Tilemap overlayLayer
-    );
-    void RotateBuilding(BuildingHandler buildingHandler, int rotationIndex);
-    // Add other methods as needed
+    void DisplayBuildingAtCursor(BuildingHandler handler, bool force = false);
+    void PlaceBuildingAtCursor(BuildingHandler handler);
+    void RemoveBuildingAtCursor(BuildingHandler handler);
 }
