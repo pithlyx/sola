@@ -1108,21 +1108,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd1e64e806b1ce44da6c1977a967069b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingManager: {fileID: 0}
-  CursorPosition: {x: 0, y: 0, z: 0}
-  selectedBuilding:
-    name: 
-    group: 0
-    buildingPrefab: {fileID: 0}
-    StaticTile: {fileID: 0}
-    AnimTile: {fileID: 0}
-    Icon: {fileID: 0}
-    levels: []
-    canRotate: 0
-    defaultRotationIndex: 0
-    inOuts: []
-  selectedBuildingObject: {fileID: 0}
   rotateKey: 114
+  ghostBuilding: {fileID: 0}
+  cursorPosition: {x: 0, y: 0, z: 0}
+  lastCursorPosition: {x: 0, y: 0, z: 0}
+  rotationIndex: 0
+  lastRotationIndex: 0
 --- !u!4 &1110797119
 Transform:
   m_ObjectHideFlags: 0
@@ -1150,10 +1141,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64332dc2958b2bc43833274916957dba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 11400000, guid: 739cc7ab83bf46045a7c894c3e25b573, type: 2}
   buildingDatabase: {fileID: 11400000, guid: 3d3ac7f285cabd740ba185d72388a6fe, type: 2}
   buildingLayer: {fileID: 531849506}
   overlayLayer: {fileID: 1688720702}
   chunkGenerator: {fileID: 1245806764}
+  resourceLayerIndex: 0
 --- !u!1 &1245806761
 GameObject:
   m_ObjectHideFlags: 0
@@ -2265,7 +2258,7 @@ Tilemap:
       - {fileID: 5161854582814633755, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
       - {fileID: -1451279406941465278, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
       - {fileID: 2111969594396351165, guid: 6bfb4f27f9e2c5c489f7bcfa7c955411, type: 3}
-      m_AnimationSpeed: 5.0000005
+      m_AnimationSpeed: 5
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 5, y: 3, z: 0}

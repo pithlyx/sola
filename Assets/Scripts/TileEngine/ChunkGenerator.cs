@@ -69,8 +69,13 @@ public class ChunkGenerator : MonoBehaviour
         return chunk;
     }
 
-    public Resource GetResourceForPoint(int worldX, int worldY, int layerIndex)
+    public Resource GetResourceForPoint(Vector3Int location)
     {
+        // Extract the worldX, worldY, and layerIndex from the Vector3Int
+        int worldX = location.x;
+        int worldY = location.y;
+        int layerIndex = location.z;
+
         // Get the resource database and noise object container for this layer
         ResourceDatabase resourceDatabase = Layers[layerIndex].resourceDatabase;
         GameObject noiseObjectContainer = Layers[layerIndex].NoiseObjectContainer;

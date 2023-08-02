@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 [System.Serializable]
 public enum Direction
@@ -30,7 +31,6 @@ public struct InOut
 public struct BuildingSettings
 {
     [Header("MetaData")]
-    public Vector3Int Location; // Stores the building location
     public bool RotationLocked; // Whether the building can be rotated or not
     public int DefaultRotationIndex; // Stores the default rotation index
     public int RotationIndex; // Stores the current rotation index

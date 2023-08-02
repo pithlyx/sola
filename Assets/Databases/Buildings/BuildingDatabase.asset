@@ -61,42 +61,11 @@ MonoBehaviour:
     - direction: 0
       flow: 1
       item: {fileID: 0}
-    - direction: 0
-      flow: 1
-      item: {fileID: 0}
-    - direction: 0
-      flow: 1
-      item: {fileID: 0}
-    - direction: 0
-      flow: 1
-      item: {fileID: 0}
-  - name: Furnace
-    group: 3
-    buildingPrefab: {fileID: -8705247072445489868, guid: b0a9b60c08cbdae4986536dbffd05430, type: 3}
-    StaticTile: {fileID: 11400000, guid: 558f3dc43a9b9c34b853499871c8d2a9, type: 2}
-    AnimTile: {fileID: 11400000, guid: 6eb18fe4923b80a4ca8fc46e104a0c06, type: 2}
-    Icon: {fileID: -9210460774835628992, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
-    levels:
-    - operationRate: 5
-      craftableItems:
-      - {fileID: 11400000, guid: 2cc891357318c33499fac6a14a13d7c0, type: 2}
-      buildCost: []
-      requiresFuel: 1
-      fuelRequired: {fileID: 11400000, guid: 289479612ffa6d142b89b20c5e3a2964, type: 2}
-      maxStock: 100
-      fuelStock: 0
-      operationCost: 2
-    canRotate: 0
-    defaultRotationIndex: 0
-    inOuts:
-    - direction: 0
-      flow: 0
-      item: {fileID: 0}
     - direction: 1
-      flow: 0
+      flow: 1
       item: {fileID: 0}
     - direction: 2
-      flow: 0
+      flow: 1
       item: {fileID: 0}
     - direction: 3
       flow: 1
@@ -128,6 +97,37 @@ MonoBehaviour:
       item: {fileID: 0}
     - direction: 2
       flow: 1
+      item: {fileID: 0}
+    - direction: 3
+      flow: 1
+      item: {fileID: 0}
+  - name: Furnace
+    group: 3
+    buildingPrefab: {fileID: -8705247072445489868, guid: b0a9b60c08cbdae4986536dbffd05430, type: 3}
+    StaticTile: {fileID: 11400000, guid: 558f3dc43a9b9c34b853499871c8d2a9, type: 2}
+    AnimTile: {fileID: 11400000, guid: 6eb18fe4923b80a4ca8fc46e104a0c06, type: 2}
+    Icon: {fileID: -9210460774835628992, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
+    levels:
+    - operationRate: 5
+      craftableItems:
+      - {fileID: 11400000, guid: 2cc891357318c33499fac6a14a13d7c0, type: 2}
+      buildCost: []
+      requiresFuel: 1
+      fuelRequired: {fileID: 11400000, guid: 289479612ffa6d142b89b20c5e3a2964, type: 2}
+      maxStock: 100
+      fuelStock: 0
+      operationCost: 2
+    canRotate: 0
+    defaultRotationIndex: 0
+    inOuts:
+    - direction: 0
+      flow: 0
+      item: {fileID: 0}
+    - direction: 1
+      flow: 0
+      item: {fileID: 0}
+    - direction: 2
+      flow: 0
       item: {fileID: 0}
     - direction: 3
       flow: 1

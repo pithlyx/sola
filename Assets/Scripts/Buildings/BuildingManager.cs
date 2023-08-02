@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -9,51 +11,98 @@ public class BuildingManager : MonoBehaviour
     public Tilemap buildingLayer;
     public Tilemap overlayLayer;
     public ChunkGenerator chunkGenerator;
-    public Dictionary<BuildingDatabase.BuildingGroup, GameObject> buildingGroupGameObjects =
-        new Dictionary<BuildingDatabase.BuildingGroup, GameObject>(); // Dictionary to store group GameObjects
-    private Dictionary<Vector3Int, Building> buildings = new Dictionary<Vector3Int, Building>(); // Dictionary to store all the buildings
+    public Dictionary<BuildingDatabase.BuildingGroup, GameObject> buildingGroupGameObjects;
+    public Dictionary<Vector3Int, Building> buildings;
+    public Dictionary<string, int> buildingTypeIndexes;
 
-    public Building NewBuilding(BuildingDatabase.BuildingData buildingData)
+    public int resourceLayerIndex = 1;
+
+    private void Awake()
     {
-        if (!buildingGroupGameObjects.ContainsKey(buildingData.group)) // Check if group GameObject already exists
-        {
-            GameObject newGroupGameObject = new GameObject(buildingData.group.ToString()); // Create a new GameObject
-            newGroupGameObject.transform.parent = this.transform; // Set this GameObject as parent
-            buildingGroupGameObjects.Add(buildingData.group, newGroupGameObject); // Add new GameObject to the dictionary
-        }
-
-        GameObject groupGameObject = buildingGroupGameObjects[buildingData.group]; // Get the group GameObject
-        Building newBuilding = buildingData.buildingPrefab.CreateBuilding(); // Instantiate a new Building from prefab
-        newBuilding.buildingData = buildingData; // Set the buildingData for the new Building
-        GameObject newBuildingGameObject = newBuilding.gameObject; // Get the GameObject of the new Building
-        newBuildingGameObject.transform.parent = groupGameObject.transform; // Set the group GameObject as parent
-        newBuildingGameObject.name = buildingData.name; // Set the name of the GameObject
-
-        return newBuilding; // Return the new Building
+        buildingGroupGameObjects = new Dictionary<BuildingDatabase.BuildingGroup, GameObject>();
+        buildings = new Dictionary<Vector3Int, Building>();
+        buildingTypeIndexes = new Dictionary<string, int>();
     }
 
-    // public method that will add a building to the dictionary
-    public Building AddBuilding(Building building)
+    public BuildingManager(
+        ItemDatabase itemDatabase,
+        BuildingDatabase buildingDatabase,
+        Tilemap buildingLayer,
+        Tilemap overlayLayer,
+        ChunkGenerator chunkGenerator
+    )
     {
-        Vector3Int buildingLocation = building.GetBuildingLocation(); // Get the location of the building
-        // if there is already a building at the location return null
-        if (buildings.ContainsKey(buildingLocation))
-        {
-            return null;
-        }
-        buildings.Add(buildingLocation, building); // Add the building to the dictionary
-        return building; // Return the building
+        this.itemDatabase = itemDatabase;
+        this.buildingDatabase = buildingDatabase;
+        this.buildingLayer = buildingLayer;
+        this.overlayLayer = overlayLayer;
+        this.chunkGenerator = chunkGenerator;
     }
 
-    // public method that will get a building from the dictionary
-    public Building GetBuilding(Vector3Int buildingLocation)
+    public void PlaceTile(Tilemap tileMap, Vector3Int position, TileBase tileBase)
     {
-        Building building = buildings[buildingLocation]; // Get the building from the dictionary
-        // if the building doesn't exist return null
-        if (building == null)
-        {
-            return null;
-        }
-        return building; // Return the building
+        Vector3Int gridPosition = position;
+        tileMap.SetTile(gridPosition, tileBase);
     }
+
+    public void RotateTile(Tilemap tileMap, Vector3Int position, int rotationIndex)
+    {
+        Vector3Int gridPosition = position;
+        Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 0, -90 * rotationIndex));
+        tileMap.SetTransformMatrix(gridPosition, rotationMatrix);
+    }
+
+    public void ResetTile(Tilemap tileMap, Vector3Int position)
+    {
+        Vector3Int gridPosition = position;
+        tileMap.SetTile(gridPosition, null);
+        tileMap.SetTransformMatrix(gridPosition, Matrix4x4.identity);
+    }
+
+    public bool CheckPosition(Vector3Int position)
+    {
+        if (buildings.ContainsKey(position))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public List<Building> GetBuildings()
+    {
+        return buildings.Values.ToList();
+    }
+
+    public List<Building> GetBuildingsByGroup(BuildingDatabase.BuildingGroup groupName)
+    {
+        return buildings.Values
+            .Where(building => building.buildingData.group == groupName)
+            .ToList();
+    }
+
+    public List<Building> GetBuildingsByName(string buildingName)
+    {
+        return buildings.Values
+            .Where(building => building.buildingData.name == buildingName)
+            .ToList();
+    }
+
+    public int GetNewBuildingIndex(string buildingName)
+    {
+        // Check if we already have an index for this building type
+        if (buildingTypeIndexes.ContainsKey(buildingName))
+        {
+            // Increment the index and return the new value
+            buildingTypeIndexes[buildingName]++;
+        }
+        else
+        {
+            // This is the first building of this type, so initialize the index at 1
+            buildingTypeIndexes[buildingName] = 1;
+        }
+
+        return buildingTypeIndexes[buildingName];
+    }
+
+    // Other methods and functionality...
 }

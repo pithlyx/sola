@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 
-public class DefaultPlacementLogic : IPlacementLogic
+public class ExtractorPlacementLogic : IPlacementLogic
 {
     public void TrackBuildingToCursor(
         BuildingHandler handler,
@@ -39,6 +39,31 @@ public class DefaultPlacementLogic : IPlacementLogic
         int buildingIndex = manager.GetNewBuildingIndex(ghostBuilding.buildingData.name);
         // Create a copy of the ghost building
         Building newBuilding = ghostBuilding.Clone(ghostBuilding.buildingData.name + buildingIndex);
+        // Use a Switch statement to determine the resource layer index based on building name
+        int resourceLayerIndex = 0;
+        switch (newBuilding.buildingData.name)
+        {
+            case "Pump":
+                resourceLayerIndex = 0;
+                break;
+            case "Mine":
+                resourceLayerIndex = 1;
+                break;
+            default:
+                resourceLayerIndex = 1;
+                break;
+        }
+        // Create a Vector3Int for the resource location with the z value set to the resource layer index
+        Vector3Int resourceLocation = new Vector3Int(
+            handler.cursorPosition.x,
+            handler.cursorPosition.y,
+            resourceLayerIndex
+        );
+        // Get the resource for the extractor
+        Resource resource = manager.chunkGenerator.GetResourceForPoint(resourceLocation);
+        // Convert the resource to an item
+        CraftableItem item = manager.itemDatabase.GetItemByResource(resource);
+
         // Add the building to the buildings dictionary
         manager.buildings.Add(handler.cursorPosition, newBuilding);
     }
@@ -49,7 +74,6 @@ public class DefaultPlacementLogic : IPlacementLogic
         {
             // Get the building from the buildings dictionary
             Building buildingToRemove = manager.buildings[cursorPosition];
-            Debug.Log("Removing building: " + buildingToRemove.buildingData.name);
             // Remove the building's tile from the tilemap
             manager.ResetTile(manager.buildingLayer, cursorPosition);
 

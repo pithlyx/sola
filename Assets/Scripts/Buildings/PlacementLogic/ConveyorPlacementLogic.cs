@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 
-public class DefaultPlacementLogic : IPlacementLogic
+public class ConveyorPlacementLogic : IPlacementLogic
 {
     public void TrackBuildingToCursor(
         BuildingHandler handler,
@@ -49,7 +49,6 @@ public class DefaultPlacementLogic : IPlacementLogic
         {
             // Get the building from the buildings dictionary
             Building buildingToRemove = manager.buildings[cursorPosition];
-            Debug.Log("Removing building: " + buildingToRemove.buildingData.name);
             // Remove the building's tile from the tilemap
             manager.ResetTile(manager.buildingLayer, cursorPosition);
 

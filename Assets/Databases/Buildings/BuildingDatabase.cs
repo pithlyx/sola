@@ -113,4 +113,22 @@ public class BuildingDatabase : ScriptableObject
     {
         return allBuildings;
     }
+
+    public virtual Building CreateBuildingObject(BuildingData data, string name)
+    {
+        // Instantiate a new instance of this prefab
+        Building newBuilding = Instantiate(data.buildingPrefab);
+
+        // Set the name of the GameObject
+        newBuilding.gameObject.name = name;
+
+        // Set the buildingData of the new building
+        newBuilding.buildingData = data;
+
+        // Copy the InOut configurations from the BuildingData to the new Building
+        newBuilding.inOuts = new List<InOut>(data.inOuts);
+
+        // Return the new building instance
+        return newBuilding;
+    }
 }
