@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 199aa59b4c44e0240867fb5dabaa8469, type: 3}
-  m_Name: IronOre
+  m_Name: IronIngot
   m_EditorClassIdentifier: 
-  itemName: Iron Ore
-  icon: {fileID: 715153995, guid: 7267c137f2b35ff4fa1a508b4902e2f6, type: 3}
+  type: 0
+  itemName: Iron Ingot
+  icon: {fileID: 1546563430, guid: 7267c137f2b35ff4fa1a508b4902e2f6, type: 3}
   materialCosts:
-  - material:
-      resource: {fileID: 11400000, guid: 8226e3d8241a34c48a0086797661dc7c, type: 2}
-      craftableItem: {fileID: 0}
-    quantity: 1
-  processCost: 1
+  - material: {fileID: 11400000, guid: 8226e3d8241a34c48a0086797661dc7c, type: 2}
+    quantity: 5
+  operationCost: 0

@@ -59,11 +59,6 @@ public class ExtractorPlacementLogic : IPlacementLogic
             handler.cursorPosition.y,
             resourceLayerIndex
         );
-        // Get the resource for the extractor
-        Resource resource = manager.chunkGenerator.GetResourceForPoint(resourceLocation);
-        // Convert the resource to an item
-        CraftableItem item = manager.itemDatabase.GetItemByResource(resource);
-
         // Add the building to the buildings dictionary
         manager.buildings.Add(handler.cursorPosition, newBuilding);
     }

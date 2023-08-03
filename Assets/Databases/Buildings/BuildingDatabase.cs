@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "BuildingDatabase", menuName = "Database/BuildingDatabase", order = 1)]
 public class BuildingDatabase : ScriptableObject
@@ -21,13 +22,13 @@ public class BuildingDatabase : ScriptableObject
     [System.Serializable]
     public struct BuildingLevelData
     {
-        public float operationRate; // The operation rate at this level
-        public List<CraftableItem> craftableItems; // The items that can be crafted at this level
+        public float operationRate; // The amount of operations per second at this level
+        public List<Item> Items; // The items that can be crafted at this level
         public List<MaterialCost> buildCost; // The cost to build or upgrade to this level
 
         [Header("Fuel")]
         public bool requiresFuel; // Whether or not the building requires fuel to operate
-        public CraftableItem fuelRequired; // The fuel required to operate the building
+        public Item fuelRequired; // The fuel required to operate the building
         public float maxStock; // The maximum amount of "fuel" the building can hold
         public int fuelStock; // The amount of "fuel" the building has
         public float operationCost; // The fuel cost of a single operation
@@ -48,8 +49,8 @@ public class BuildingDatabase : ScriptableObject
         public bool canRotate; // Whether or not the building can be rotated
         public int defaultRotationIndex; // The default rotation of the building
 
-        [Header("Input/Output")]
-        public List<InOut> inOuts; // Input and output configuration for the building
+        [Header("Ports")]
+        public Ports defaultPorts; // The default port for the building
     }
 
     [System.Serializable]
@@ -64,35 +65,31 @@ public class BuildingDatabase : ScriptableObject
 
     public BuildingData GetBuildingDataByName(string name)
     {
-        foreach (BuildingData buildingData in allBuildings)
+        var result = allBuildings.FirstOrDefault(buildingData => buildingData.name == name);
+        if (result.name == null)
         {
-            if (buildingData.name == name)
-            {
-                return buildingData;
-            }
+            Debug.LogError("No building data found for the given name: " + name);
+            return default(BuildingData); // Return the default value for BuildingData
         }
+        return result;
+    }
 
-        Debug.LogError("No building data found for the given name: " + name);
-        return default(BuildingData); // Return the default value for BuildingData
+    public BuildingData GetBuildingDataByPrefab(Building buildingPrefab)
+    {
+        var result = allBuildings.FirstOrDefault(
+            buildingData => buildingData.buildingPrefab == buildingPrefab
+        );
+        if (result.buildingPrefab == null)
+        {
+            Debug.LogError("No building data found for the given prefab: " + buildingPrefab.name);
+            return default(BuildingData);
+        }
+        return result;
     }
 
     public List<BuildingData> GetBuildingsByGroup(BuildingGroup group)
     {
         return allBuildings.FindAll(buildingData => buildingData.group == group);
-    }
-
-    public BuildingData GetBuildingDataByPrefab(Building buildingPrefab)
-    {
-        foreach (BuildingData buildingData in allBuildings)
-        {
-            if (buildingData.buildingPrefab == buildingPrefab)
-            {
-                return buildingData;
-            }
-        }
-
-        Debug.LogError("No building data found for the given prefab: " + buildingPrefab.name);
-        return default(BuildingData);
     }
 
     public KeyCode GetHotkeyByGroup(BuildingGroup group)
@@ -124,9 +121,6 @@ public class BuildingDatabase : ScriptableObject
 
         // Set the buildingData of the new building
         newBuilding.buildingData = data;
-
-        // Copy the InOut configurations from the BuildingData to the new Building
-        newBuilding.inOuts = new List<InOut>(data.inOuts);
 
         // Return the new building instance
         return newBuilding;

@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40656784b8bcae45930211011e4b084, type: 3}
-  m_Name: Stone
+  m_Name: AluminumOre
   m_EditorClassIdentifier: 
-  resourceName: Stone
-  icon: {fileID: -1596038047, guid: 3ee81c79cdf271940b7bd78de4ebe092, type: 3}
-  tile: {fileID: 11400000, guid: 3cebffe4c4638bf42b0390a7592f7308, type: 2}
-  description: 
-  thresholds:
-  - Layer: 0
-    Threshold: 0.45
-  - Layer: 0
-    Threshold: 0.25
+  type: 0
+  itemName: Aluminum Ore
+  icon: {fileID: -671284235, guid: 7267c137f2b35ff4fa1a508b4902e2f6, type: 3}
+  materialCosts: []
+  operationCost: 1
+  canHarvest: 1
+  resourceName: Aluminum
+  tile: {fileID: 11400000, guid: 506211235056afa40b9acaede104e168, type: 2}

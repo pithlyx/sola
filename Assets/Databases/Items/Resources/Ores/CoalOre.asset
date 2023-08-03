@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40656784b8bcae45930211011e4b084, type: 3}
-  m_Name: Water
+  m_Name: CoalOre
   m_EditorClassIdentifier: 
-  resourceName: Water
-  icon: {fileID: 1332728659, guid: 3ee81c79cdf271940b7bd78de4ebe092, type: 3}
-  tile: {fileID: 11400000, guid: ac1844c9c682ddc4dbd8b79e489631b1, type: 2}
-  description: 
-  thresholds:
-  - Layer: 0
-    Threshold: -1
+  type: 0
+  itemName: Coal Ore
+  icon: {fileID: 1840905601, guid: 7267c137f2b35ff4fa1a508b4902e2f6, type: 3}
+  materialCosts: []
+  operationCost: 1
+  canHarvest: 1
+  resourceName: Coal
+  tile: {fileID: 11400000, guid: a85797a9b55edbd4f98693c68c3c5ba2, type: 2}

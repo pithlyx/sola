@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40656784b8bcae45930211011e4b084, type: 3}
-  m_Name: Sand
+  m_Name: Trees
   m_EditorClassIdentifier: 
-  resourceName: Sand
-  icon: {fileID: 1716613077, guid: 3ee81c79cdf271940b7bd78de4ebe092, type: 3}
-  tile: {fileID: 11400000, guid: 35960c1b3e51f09419a54a3563ba6f53, type: 2}
-  description: 
-  thresholds:
-  - Layer: 0
-    Threshold: -0.1
+  type: 0
+  itemName: Forest
+  icon: {fileID: 216662362, guid: d1319b1dafd2e0f41aab0ddaed01fde2, type: 3}
+  materialCosts: []
+  operationCost: 0
+  canHarvest: 1
+  resourceName: Forest
+  tile: {fileID: 11400000, guid: befc107754ce4534fb5074bf5d90adce, type: 2}

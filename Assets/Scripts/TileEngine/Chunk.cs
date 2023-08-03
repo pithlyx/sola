@@ -3,13 +3,15 @@ using UnityEngine.Tilemaps;
 
 public class Chunk
 {
+    public static int chunkSize = 16;
+
     public struct TileData
     {
         public TileBase tileBase;
         public Matrix4x4 transformMatrix;
     }
 
-    public TileData[,] Tiles = new TileData[16, 16];
+    public TileData[,] Tiles = new TileData[chunkSize, chunkSize];
     public int Layer;
 
     public void DisplayOnTilemap(Tilemap[] tilemaps, Vector2Int position)

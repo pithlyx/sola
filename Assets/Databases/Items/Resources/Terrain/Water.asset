@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40656784b8bcae45930211011e4b084, type: 3}
-  m_Name: AluminumOre
+  m_Name: Water
   m_EditorClassIdentifier: 
-  resourceName: Aluminum Ore
-  icon: {fileID: -272732746, guid: 3ee81c79cdf271940b7bd78de4ebe092, type: 3}
-  itemSprite: {fileID: 715153995, guid: 7267c137f2b35ff4fa1a508b4902e2f6, type: 3}
-  tile: {fileID: 11400000, guid: 506211235056afa40b9acaede104e168, type: 2}
-  description: 
-  thresholds:
-  - Layer: 1
-    Threshold: 0.3
+  type: 0
+  itemName: Water
+  icon: {fileID: -111811156, guid: d1319b1dafd2e0f41aab0ddaed01fde2, type: 3}
+  materialCosts: []
+  operationCost: 1
+  canHarvest: 1
+  resourceName: Water
+  tile: {fileID: 11400000, guid: ac1844c9c682ddc4dbd8b79e489631b1, type: 2}

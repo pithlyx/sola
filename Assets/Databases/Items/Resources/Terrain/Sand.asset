@@ -10,16 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40656784b8bcae45930211011e4b084, type: 3}
-  m_Name: Grass
+  m_Name: Sand
   m_EditorClassIdentifier: 
-  resourceName: Grass
-  icon: {fileID: -700509310, guid: 3ee81c79cdf271940b7bd78de4ebe092, type: 3}
-  tile: {fileID: 11400000, guid: da7e02d23ab885f428b4cdf664865192, type: 2}
-  description: 
-  thresholds:
-  - Layer: 0
-    Threshold: 0.1
-  - Layer: 0
-    Threshold: 0.3
-  - Layer: 0
-    Threshold: 0.5
+  type: 0
+  itemName: Sand
+  icon: {fileID: 0}
+  materialCosts: []
+  operationCost: 0
+  canHarvest: 0
+  resourceName: Sand
+  tile: {fileID: 11400000, guid: 35960c1b3e51f09419a54a3563ba6f53, type: 2}

@@ -52,50 +52,20 @@ public class ChunkGenerator : MonoBehaviour
                 }
                 float averageNoise = totalNoise / noiseObjects.Length;
 
-                // Get a TileBase based on the average noise value
-                TileBase tileBase = resourceDatabase.GetTileForNoise(layerIndex, averageNoise);
+                // Get a resource based on the average noise value
+                // TileBase tileBase = resourceDatabase.GetResource(averageNoise, layerIndex).tile;
+                // Debug.Log(tileBase);
+                // // If no matching tile was found, use the default tile
+                // if (tileBase == null)
+                // {
+                //     tileBase = defaultTile;
+                // }
 
-                // If no matching tile was found, use the default tile
-                if (tileBase == null)
-                {
-                    tileBase = defaultTile;
-                }
-
-                // Create a new tile with this TileBase
-                chunk.SetTile(x, y, tileBase);
+                // // Create a new tile with this TileBase
+                // chunk.SetTile(x, y, tileBase);
             }
         }
 
         return chunk;
-    }
-
-    public Resource GetResourceForPoint(Vector3Int location)
-    {
-        // Extract the worldX, worldY, and layerIndex from the Vector3Int
-        int worldX = location.x;
-        int worldY = location.y;
-        int layerIndex = location.z;
-
-        // Get the resource database and noise object container for this layer
-        ResourceDatabase resourceDatabase = Layers[layerIndex].resourceDatabase;
-        GameObject noiseObjectContainer = Layers[layerIndex].NoiseObjectContainer;
-
-        // Get all FastNoiseSIMDUnity components from the GameObject
-        FastNoiseSIMDUnity[] noiseObjects =
-            noiseObjectContainer.GetComponents<FastNoiseSIMDUnity>();
-
-        // Get Perlin noise value at this position from each noiseObject and average them
-        float totalNoise = 0f;
-        foreach (var noiseObject in noiseObjects)
-        {
-            float[] noiseSet = noiseObject.fastNoiseSIMD.GetNoiseSet(worldX, worldY, 0, 1, 1, 1);
-            totalNoise += noiseSet[0];
-        }
-        float averageNoise = totalNoise / noiseObjects.Length;
-
-        // Get the resource based on the average noise value
-        Resource resource = resourceDatabase.GetResourceForNoise(layerIndex, averageNoise);
-
-        return resource;
     }
 }

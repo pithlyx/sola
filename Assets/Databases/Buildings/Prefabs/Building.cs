@@ -5,11 +5,8 @@ using UnityEngine.Tilemaps;
 public abstract class Building : MonoBehaviour
 {
     [Header("Base")]
-    public BuildingSettings BuildingSettings; // Stores the default building settings
-    public BuildingDatabase.BuildingData buildingData;
-
-    [Header("Input/Output")]
-    public List<InOut> inOuts; // Input and output configuration for the building
+    public BuildingSettings BuildingSettings; // Stores the default building metadata
+    public BuildingDatabase.BuildingData buildingData; // Stores the data for the building from the database
 
     // Method to create a copy of the building
     public virtual Building Clone(string name = null)
@@ -57,5 +54,5 @@ public abstract class Building : MonoBehaviour
         return IsActive ? buildingData.AnimTile : buildingData.StaticTile;
     }
 
-    public virtual void OnPlaced(CraftableItem item = null) { }
+    public virtual void OnPlaced(Item item = null) { }
 }
