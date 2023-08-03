@@ -10,7 +10,7 @@ public class BuildingManager : MonoBehaviour
     public BuildingDatabase buildingDatabase;
     public Tilemap buildingLayer;
     public Tilemap overlayLayer;
-    public ChunkGenerator chunkGenerator;
+    public LayerGenerator chunkGenerator;
     public Dictionary<BuildingDatabase.BuildingGroup, GameObject> buildingGroupGameObjects;
     public Dictionary<Vector3Int, Building> buildings;
     public Dictionary<string, int> buildingTypeIndexes;
@@ -29,7 +29,7 @@ public class BuildingManager : MonoBehaviour
         BuildingDatabase buildingDatabase,
         Tilemap buildingLayer,
         Tilemap overlayLayer,
-        ChunkGenerator chunkGenerator
+        LayerGenerator chunkGenerator
     )
     {
         this.itemDatabase = itemDatabase;

@@ -1,132 +1,199 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [System.Serializable]
-public struct Threshold
+public struct LayerConfig
 {
-    public int mapLayer;
-    public float threshold;
+    public LayerName layerName;
+    public List<float> minThresholds;
 }
 
 [System.Serializable]
 public struct ResourceConfig
 {
+    public string resourceName;
     public Resource resource;
-    public List<Threshold> thresholds;
-    public int index; // Add an index field
+    public bool canHarvest;
+    public List<LayerConfig> layerConfigs;
 }
 
-[System.Serializable]
-public struct ThresholdResourcePair
-{
-    public float Threshold;
-    public Resource Resource;
-
-    public ThresholdResourcePair(float threshold, Resource resource)
-    {
-        Threshold = threshold;
-        Resource = resource;
-    }
-}
-
-[CreateAssetMenu(fileName = "New Resource Database", menuName = "Database/Resource Database")]
+[CreateAssetMenu(fileName = "New Layer Database", menuName = "Database/Layer Database")]
 public class ResourceDatabase : ScriptableObject
 {
-    public List<ResourceConfig> allResources;
+    public List<ResourceConfig> resourceConfigs;
+    public List<Resource> resources = new List<Resource>();
+    public Dictionary<LayerName, SortedDictionary<float, int>> layers =
+        new Dictionary<LayerName, SortedDictionary<float, int>>();
 
-    // Add a mapping from Resource to index
-    public Dictionary<Resource, int> resourceToIndex = new Dictionary<Resource, int>();
+    // The instance of the ResourceDatabase
+    public static ResourceDatabase Instance { get; set; }
 
-    // Pre-sorted thresholds
-    private Dictionary<int, List<ThresholdResourcePair>> sortedThresholds =
-        new Dictionary<int, List<ThresholdResourcePair>>();
-
-    private void OnEnable()
+    public void PopulateData()
     {
-        // Populate the resourceToIndex dictionary
-        for (int i = 0; i < allResources.Count; i++)
-        {
-            resourceToIndex[allResources[i].resource] = i;
-        }
+        // Clear existing data
+        layers.Clear();
 
-        // Sort thresholds on enable
-        foreach (var resource in allResources)
+        // Iterate over all resource configs
+        for (int i = 0; i < resourceConfigs.Count; i++)
         {
-            foreach (var threshold in resource.thresholds)
+            // Add the resource to the list of resources
+            resources.Add(resourceConfigs[i].resource);
+
+            // Iterate over all layer configs of the current resource config
+            foreach (var layerConfig in resourceConfigs[i].layerConfigs)
             {
-                if (!sortedThresholds.ContainsKey(threshold.mapLayer))
+                // If the layer doesn't exist in the dictionary yet, add it
+                if (!layers.ContainsKey(layerConfig.layerName))
                 {
-                    sortedThresholds[threshold.mapLayer] = new List<ThresholdResourcePair>();
+                    layers[layerConfig.layerName] = new SortedDictionary<float, int>();
                 }
 
-                sortedThresholds[threshold.mapLayer].Add(
-                    new ThresholdResourcePair(threshold.threshold, resource.resource)
-                );
+                // Iterate over all minThresholds of the current layer config
+                foreach (var minThreshold in layerConfig.minThresholds)
+                {
+                    // Add the minThreshold and the index of the current resource config to the dictionary
+                    layers[layerConfig.layerName][minThreshold] = i;
+                }
+            }
+        }
+    }
+
+    public List<float> GetNoise(FastNoiseSIMD noiseGenerator, Vector3Int origin, int chunkSize)
+    {
+        // Generate the noise for the chunk
+        List<float> noiseSet = noiseGenerator
+            .GetNoiseSet(origin.x, origin.y, origin.z, chunkSize, chunkSize, 1)
+            .ToList();
+        return noiseSet;
+    }
+
+    public int NoiseToIndex(LayerName layerName, float noise)
+    {
+        // Check if the layers dictionary contains the layerName
+        if (!layers.ContainsKey(layerName))
+        {
+            // Return -1 to indicate that the layerName was not found
+            return -1;
+        }
+
+        // Get the dictionary of thresholds and indices for the layer
+        var thresholds = layers[layerName];
+
+        // Perform a binary search for the noise value
+        var thresholdKeys = thresholds.Keys.ToList();
+        int index = thresholdKeys.BinarySearch(noise);
+
+        // If the exact noise value is not found, BinarySearch returns a negative number
+        // that is the bitwise complement of the next larger element
+        if (index < 0)
+        {
+            index = ~index - 1;
+        }
+
+        // Check if a suitable threshold was found
+        if (index >= 0)
+        {
+            // Return the index associated with the threshold
+            return thresholds[thresholdKeys[index]];
+        }
+
+        // Return -1 to indicate that no suitable threshold was found
+        return -1;
+    }
+
+    // When calling the NoiseToIndices method, returns a list of resource indices (or -1 if a layer name is not found).
+    public List<int> NoiseToIndices(LayerName layerName, List<float> noises)
+    {
+        // Check if the layers dictionary contains the layerName
+        if (!layers.ContainsKey(layerName))
+        {
+            // Return a list of -1s to indicate that the layerName was not found
+            return Enumerable.Repeat(-1, noises.Count).ToList();
+        }
+
+        // Get the dictionary of thresholds and indices for the layer
+        var thresholds = layers[layerName];
+
+        // Create a list of tuples, each containing a noise value and its original index
+        var noiseTuples = noises.Select((n, i) => (noise: n, index: i)).ToList();
+
+        // Sort the list of tuples by noise value in ascending order
+        var sortedNoiseTuples = noiseTuples.OrderBy(t => t.noise).ToList();
+
+        // Get the thresholds in ascending order
+        var thresholdKeys = thresholds.Keys.ToList();
+
+        // Initialize the list of indices
+        var indices = new int[noises.Count];
+
+        // Initialize the current threshold index and noise tuple index
+        int thresholdIndex = 0,
+            noiseTupleIndex = 0;
+
+        // Iterate over the sorted noise tuples and thresholds
+        while (noiseTupleIndex < sortedNoiseTuples.Count)
+        {
+            // If the current threshold is less than or equal to the current noise value, or if we've reached the last threshold,
+            // add the index associated with the current threshold to the list of indices at the original index of the noise value,
+            // and advance to the next noise tuple
+            if (
+                thresholdIndex == thresholdKeys.Count - 1
+                || thresholdKeys[thresholdIndex] <= sortedNoiseTuples[noiseTupleIndex].noise
+            )
+            {
+                indices[sortedNoiseTuples[noiseTupleIndex].index] = thresholds[
+                    thresholdKeys[thresholdIndex]
+                ];
+                noiseTupleIndex++;
+            }
+            else
+            {
+                // Otherwise, advance to the next threshold
+                thresholdIndex++;
             }
         }
 
-        // Sort each list of thresholds
-        foreach (var pairList in sortedThresholds.Values)
-        {
-            pairList.Sort((pair1, pair2) => pair1.Threshold.CompareTo(pair2.Threshold));
-        }
+        // Return the list of indices
+        return indices.ToList();
     }
 
-    public int[] MapResourcesToNoise(float[] noise, int layer)
+    public Resource IndexToResource(int index)
     {
-        // Check if there are thresholds for the given layer
-        if (!sortedThresholds.ContainsKey(layer))
+        // Check if the index is within the bounds of the resources list
+        if (index < 0 || index >= resources.Count)
         {
-            Debug.LogError("No thresholds found for layer " + layer);
+            // Return null to indicate that the index is out of bounds
             return null;
         }
 
-        // Get the thresholds for the layer
-        var thresholds = sortedThresholds[layer];
-
-        // Create a new array for the resource indexes
-        int[] resourceIndexes = new int[noise.Length];
-
-        // Loop over all noise values
-        for (int i = 0; i < noise.Length; i++)
-        {
-            // Initialize with a default value
-            resourceIndexes[i] = -1;
-
-            // Loop over all thresholds
-            for (int j = 0; j < thresholds.Count; j++)
-            {
-                // If the noise value is less than the threshold, assign the resource index
-                if (noise[i] < thresholds[j].Threshold)
-                {
-                    Debug.Log("Assigning (" + i + "," + j + ") to index " + i);
-                    resourceIndexes[i] = resourceToIndex[thresholds[j].Resource];
-                    break;
-                }
-            }
-        }
-
-        return resourceIndexes;
+        // Return the Resource at the given index
+        return resources[index];
     }
 
-    public List<Resource> GetResourcesFromIndexes(int[] indexes)
+    public List<Resource> IndicesToResources(List<int> indices)
     {
-        // Create a new list for the resources
-        List<Resource> resources = new List<Resource>(indexes.Length);
+        // Initialize the list of Resources
+        var resources = new List<Resource>();
 
-        // Loop over all indexes
-        for (int i = 0; i < indexes.Length; i++)
+        // Iterate over the list of indices
+        foreach (var index in indices)
         {
-            // Check if the index is valid
-            if (indexes[i] >= 0 && indexes[i] < allResources.Count)
+            // Check if the index is within the bounds of the resources list
+            if (index >= 0 && index < this.resources.Count)
             {
-                // Get the resource from the database and add it to the list
-                resources.Add(allResources[indexes[i]].resource);
+                // Add the Resource at the given index to the list of Resources
+                resources.Add(this.resources[index]);
+            }
+            else
+            {
+                // Add null to the list to indicate that the index is out of bounds
+                resources.Add(null);
             }
         }
 
+        // Return the list of Resources
         return resources;
     }
 }

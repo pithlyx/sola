@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(fileName = "New Resource", menuName = "Items/Resource")]
+[CreateAssetMenu(fileName = "New Resource", menuName = "Items/New Resource")]
 public class Resource : Item
 {
-    public bool canHarvest;
     public string resourceName;
+    public bool canHarvest;
     public TileBase tile;
 }

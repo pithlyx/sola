@@ -1,38 +1,17 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 public class Chunk
 {
-    public static int chunkSize = 16;
+    public Vector3Int chunkOrigin; // The origin of the chunk
+    public int chunkSize; // The size of the chunk
+    public int[,] tiles; // Indices of the resources in each tile
 
-    public struct TileData
+    public Chunk(int size, Vector3Int origin)
     {
-        public TileBase tileBase;
-        public Matrix4x4 transformMatrix;
-    }
-
-    public TileData[,] Tiles = new TileData[chunkSize, chunkSize];
-    public int Layer;
-
-    public void DisplayOnTilemap(Tilemap[] tilemaps, Vector2Int position)
-    {
-        for (int x = 0; x < 16; x++)
-        {
-            for (int y = 0; y < 16; y++)
-            {
-                Vector3Int tilemapPosition = new Vector3Int(position.x + x, position.y + y, 0);
-                tilemaps[Layer].SetTile(tilemapPosition, Tiles[x, y].tileBase);
-                tilemaps[Layer].SetTransformMatrix(tilemapPosition, Tiles[x, y].transformMatrix);
-            }
-        }
-    }
-
-    public void SetTile(int x, int y, TileBase tileBase)
-    {
-        TileData tileData;
-        tileData.tileBase = tileBase;
-        tileData.transformMatrix = Matrix4x4.identity;
-
-        Tiles[x, y] = tileData;
+        this.chunkSize = size; // Set the size of the chunk
+        this.chunkOrigin = origin; // Set the origin of the chunk
+        tiles = new int[chunkSize, chunkSize]; // Initialize the tiles array
     }
 }

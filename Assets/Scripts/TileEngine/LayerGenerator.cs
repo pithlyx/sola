@@ -3,121 +3,59 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
 
+[System.Serializable]
+public struct NoiseGenerator
+{
+    public FastNoiseSIMDUnity noiseObject; // The FastNoiseSIMDUnity of the noise generator
+    public LayerName layer; // The layer this noise generator is associated with
+
+    public NoiseGenerator(FastNoiseSIMDUnity noiseObject, LayerName layer)
+    {
+        this.noiseObject = noiseObject;
+        this.layer = layer;
+    }
+}
+
 public class LayerGenerator : MonoBehaviour
 {
+    [Header("Layer Generator References")]
     public Tilemap tilemap; // Reference to the tilemap
-    public Camera mainCamera; // The main camera
+    public Camera mainCamera; // The main camera (used for getting the "position" of the user)
+    public ResourceDatabase resourceDatabase; // ResourceDatabase to use for generating layers
+
+    public List<NoiseGenerator> noiseGenerators; // List of noise generators used for each layers noise
+
+    [Header("Generator Settings")]
+    public int chunkSize = 16; // The size of the chunks
+    public TileBase defaultTile; // The tile to use if no matching threshold is found
+    public int renderDistance = 2; // The distance in chunks to generate around the players viewport
+
+    [Header("Layer Information")]
+    public LayerName currentlayer; // The name of the layer to generate
     public Vector3Int currentChunkPosition; // The current chunk position
     public Vector3Int lastChunkPosition; // The previous chunk position
-    public ResourceDatabase resourceDatabase; // ResourceDatabase
-    public List<GameObject> NoiseGenerators; // List of noise generators used for each layers noise
-    public int layerIndex; // The index of the displayed layer
+    private Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>(); // Dictionary of loaded chunks
 
-    [Header("Layer Settings")]
-    public int chunkSize; // The size of the chunks
-    public TileBase defaultTile; // The tile to use if no matching threshold is found
-    private Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>();
-
-    private void Awake()
+    private void Start()
     {
-        // Get the main camera
-        mainCamera = Camera.main;
-        // Get the parent tilemap
-        tilemap = GetComponent<Tilemap>();
+        // Initialize the terrain when the game starts
+        InitializeTerrain();
     }
 
-    public void Update()
+    private void Update()
     {
-        // Get the chunk position of the camera
-        currentChunkPosition = Vector3Int.FloorToInt(mainCamera.transform.position / chunkSize);
-        if (currentChunkPosition == lastChunkPosition)
-        {
-            return;
-        }
-        //generate chunks that intersect the cameras viewport and arent in the loaded chunks dictionary
-        for (int y = currentChunkPosition.y - 1; y <= currentChunkPosition.y + 1; y++)
-        {
-            for (int x = currentChunkPosition.x - 1; x <= currentChunkPosition.x + 1; x++)
-            {
-                Vector3Int chunkPosition = new Vector3Int(x, y, 0);
-                if (!loadedChunks.ContainsKey(chunkPosition))
-                {
-                    loadedChunks[chunkPosition] = GenerateChunk(chunkPosition);
-                }
-            }
-        }
-
-        // Get the chunk position of the camera
-        lastChunkPosition = currentChunkPosition;
+        // Update the terrain as needed when the game updates
+        UpdateTerrain();
     }
 
-    public Chunk GenerateChunk(Vector3Int chunkPosition)
+    private Chunk GenerateChunk(Vector3Int chunkPosition)
     {
-        // get the noise for the current chunk
-        float[] noise = GetNoiseForRegion(
-            NoiseGenerators[layerIndex],
-            chunkPosition * chunkSize,
-            chunkSize,
-            0
-        );
-        Debug.Log(noise);
-        int[] resourceIndices = resourceDatabase.MapResourcesToNoise(noise, layerIndex);
-        Debug.Log(resourceIndices);
-        List<Resource> resources = resourceDatabase.GetResourcesFromIndexes(resourceIndices);
-        DisplayChunk(resources, currentChunkPosition * chunkSize);
-        return new Chunk(); // Need to return a Chunk object here
+        // This method should generate a chunk at the given position
+        // It might involve generating noise for each tile in the chunk and converting that noise to resource indices using the ResourceDatabase
     }
 
-    public float[] GetNoiseForRegion(
-        GameObject noiseGenerator,
-        Vector3Int start,
-        int size,
-        int Depth = 0
-    )
+    private List<Vector3Int> Get CunksInRange(Vector3Int chunkPosition, int range)
     {
-        FastNoiseSIMDUnity noiseComponent = noiseGenerator.GetComponent<FastNoiseSIMDUnity>();
-
-        // Save the current settings of the noise component
-        noiseComponent.SaveSettings();
-
-        // Use the FastNoiseSIMD object of the noise component to fill a noise set
-        float[] noiseSet = noiseComponent.fastNoiseSIMD.GetEmptyNoiseSet(size, size, Depth);
-        noiseComponent.fastNoiseSIMD.FillNoiseSet(
-            noiseSet,
-            start.x,
-            start.y,
-            0,
-            start.x + size,
-            start.y + size,
-            Depth
-        );
-
-        return noiseSet;
-    }
-
-    public void DisplayChunk(List<Resource> resources, Vector3 chunkPosition)
-    {
-        // Convert the chunk position to a Vector3Int, which is used by the tilemap
-        Vector3Int chunkPositionInt = Vector3Int.FloorToInt(chunkPosition);
-
-        // Loop over all tiles in the chunk
-        for (int y = 0; y < chunkSize; y++)
-        {
-            for (int x = 0; x < chunkSize; x++)
-            {
-                // Calculate the index of the resource for this tile
-                int index = y * chunkSize + x;
-
-                // Check if the index is within the range of the resources list
-                if (index >= 0 && index < resources.Count)
-                {
-                    // Get the position of the tile in the tilemap
-                    Vector3Int tilePosition = chunkPositionInt + new Vector3Int(x, y, 0);
-
-                    // Set the tile in the tilemap
-                    tilemap.SetTile(tilePosition, resources[index].tile);
-                }
-            }
-        }
+        // This method should return a list of chunk positions within the given range of the given chunk position
     }
 }

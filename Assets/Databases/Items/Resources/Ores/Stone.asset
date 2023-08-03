@@ -17,6 +17,6 @@ MonoBehaviour:
   icon: {fileID: 465728727, guid: 7267c137f2b35ff4fa1a508b4902e2f6, type: 3}
   materialCosts: []
   operationCost: 1
-  canHarvest: 1
   resourceName: Stone
+  canHarvest: 1
   tile: {fileID: 11400000, guid: 3cebffe4c4638bf42b0390a7592f7308, type: 2}
