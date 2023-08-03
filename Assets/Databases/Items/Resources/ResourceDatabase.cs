@@ -26,6 +26,8 @@ public class ResourceDatabase : ScriptableObject
     public List<Resource> resources = new List<Resource>();
     public Dictionary<LayerName, SortedDictionary<float, int>> layers =
         new Dictionary<LayerName, SortedDictionary<float, int>>();
+    public Dictionary<LayerName, List<float>> layerThresholds =
+        new Dictionary<LayerName, List<float>>();
 
     // The instance of the ResourceDatabase
     public static ResourceDatabase Instance { get; set; }
@@ -34,6 +36,7 @@ public class ResourceDatabase : ScriptableObject
     {
         // Clear existing data
         layers.Clear();
+        layerThresholds.Clear();
 
         // Iterate over all resource configs
         for (int i = 0; i < resourceConfigs.Count; i++)
@@ -56,16 +59,26 @@ public class ResourceDatabase : ScriptableObject
                     // Add the minThreshold and the index of the current resource config to the dictionary
                     layers[layerConfig.layerName][minThreshold] = i;
                 }
+
+                // Store the keys of the dictionary in a separate list
+                layerThresholds[layerConfig.layerName] = layers[
+                    layerConfig.layerName
+                ].Keys.ToList();
             }
         }
     }
 
-    public List<float> GetNoise(FastNoiseSIMD noiseGenerator, Vector3Int origin, int chunkSize)
+    public List<float> GetNoise(FastNoiseSIMDUnity noiseGenerator, Vector3Int origin, int chunkSize)
     {
+        // Scale the input coordinates
+        int xStart = (int)(origin.x);
+        int yStart = (int)(origin.y);
+        int zStart = (int)(origin.z);
+        int xSize = (int)(chunkSize);
+        int ySize = (int)(chunkSize);
+
         // Generate the noise for the chunk
-        List<float> noiseSet = noiseGenerator
-            .GetNoiseSet(origin.x, origin.y, origin.z, chunkSize, chunkSize, 1)
-            .ToList();
+        List<float> noiseSet = noiseGenerator.GetNoiseSet(xStart, yStart, zStart, xSize, ySize, 1);
         return noiseSet;
     }
 
@@ -82,7 +95,7 @@ public class ResourceDatabase : ScriptableObject
         var thresholds = layers[layerName];
 
         // Perform a binary search for the noise value
-        var thresholdKeys = thresholds.Keys.ToList();
+        var thresholdKeys = layerThresholds[layerName];
         int index = thresholdKeys.BinarySearch(noise);
 
         // If the exact noise value is not found, BinarySearch returns a negative number
@@ -104,59 +117,50 @@ public class ResourceDatabase : ScriptableObject
     }
 
     // When calling the NoiseToIndices method, returns a list of resource indices (or -1 if a layer name is not found).
-    public List<int> NoiseToIndices(LayerName layerName, List<float> noises)
+    public List<int> NoiseToIndices(List<float> noiseValues, LayerName layerName)
     {
         // Check if the layers dictionary contains the layerName
         if (!layers.ContainsKey(layerName))
         {
             // Return a list of -1s to indicate that the layerName was not found
-            return Enumerable.Repeat(-1, noises.Count).ToList();
+            return Enumerable.Repeat(-1, noiseValues.Count).ToList();
         }
 
         // Get the dictionary of thresholds and indices for the layer
         var thresholds = layers[layerName];
 
-        // Create a list of tuples, each containing a noise value and its original index
-        var noiseTuples = noises.Select((n, i) => (noise: n, index: i)).ToList();
+        // Get the list of threshold keys
+        var thresholdKeys = layerThresholds[layerName];
 
-        // Sort the list of tuples by noise value in ascending order
-        var sortedNoiseTuples = noiseTuples.OrderBy(t => t.noise).ToList();
-
-        // Get the thresholds in ascending order
-        var thresholdKeys = thresholds.Keys.ToList();
-
-        // Initialize the list of indices
-        var indices = new int[noises.Count];
-
-        // Initialize the current threshold index and noise tuple index
-        int thresholdIndex = 0,
-            noiseTupleIndex = 0;
-
-        // Iterate over the sorted noise tuples and thresholds
-        while (noiseTupleIndex < sortedNoiseTuples.Count)
+        // Iterate over the list of noise values
+        List<int> indices = new List<int>();
+        foreach (float noise in noiseValues)
         {
-            // If the current threshold is less than or equal to the current noise value, or if we've reached the last threshold,
-            // add the index associated with the current threshold to the list of indices at the original index of the noise value,
-            // and advance to the next noise tuple
-            if (
-                thresholdIndex == thresholdKeys.Count - 1
-                || thresholdKeys[thresholdIndex] <= sortedNoiseTuples[noiseTupleIndex].noise
-            )
+            // Perform a binary search for the noise value
+            int index = thresholdKeys.BinarySearch(noise);
+
+            // If the exact noise value is not found, BinarySearch returns a negative number
+            // that is the bitwise complement of the next larger element
+            if (index < 0)
             {
-                indices[sortedNoiseTuples[noiseTupleIndex].index] = thresholds[
-                    thresholdKeys[thresholdIndex]
-                ];
-                noiseTupleIndex++;
+                index = ~index - 1;
+            }
+
+            // Check if a suitable threshold was found
+            if (index >= 0)
+            {
+                // Add the index associated with the threshold to the list of indices
+                indices.Add(thresholds[thresholdKeys[index]]);
             }
             else
             {
-                // Otherwise, advance to the next threshold
-                thresholdIndex++;
+                // Add -1 to the list to indicate that no suitable threshold was found
+                indices.Add(-1);
             }
         }
 
         // Return the list of indices
-        return indices.ToList();
+        return indices;
     }
 
     public Resource IndexToResource(int index)
