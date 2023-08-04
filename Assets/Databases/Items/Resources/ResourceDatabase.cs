@@ -19,6 +19,13 @@ public struct ResourceConfig
     public List<LayerConfig> layerConfigs;
 }
 
+[System.Serializable]
+public struct LayerData
+{
+    public LayerName layerName;
+    public FastNoiseSIMDUnity generator;
+}
+
 [CreateAssetMenu(fileName = "New Layer Database", menuName = "Database/Layer Database")]
 public class ResourceDatabase : ScriptableObject
 {
@@ -29,57 +36,60 @@ public class ResourceDatabase : ScriptableObject
     public Dictionary<LayerName, List<float>> layerThresholds =
         new Dictionary<LayerName, List<float>>();
 
+    public List<LayerData> noiseGenerators;
+
     // The instance of the ResourceDatabase
     public static ResourceDatabase Instance { get; set; }
 
-    public void PopulateData()
+    public void PopulateData(List<LayerData> layersData)
     {
         // Clear existing data
         layers.Clear();
         layerThresholds.Clear();
-
-        // Iterate over all resource configs
-        for (int i = 0; i < resourceConfigs.Count; i++)
+        // clear generators
+        noiseGenerators.Clear();
+        // Iterate over all layer configs
+        foreach (LayerData layer in layersData)
         {
-            // Add the resource to the list of resources
-            resources.Add(resourceConfigs[i].resource);
+            AddGenerator(layer.layerName, layer.generator);
 
-            // Iterate over all layer configs of the current resource config
-            foreach (var layerConfig in resourceConfigs[i].layerConfigs)
+            // Iterate over all resource configs
+            for (int i = 0; i < resourceConfigs.Count; i++)
             {
-                // If the layer doesn't exist in the dictionary yet, add it
-                if (!layers.ContainsKey(layerConfig.layerName))
+                // Iterate over all layer configs of the current resource config
+                foreach (var layerConfig in resourceConfigs[i].layerConfigs)
                 {
-                    layers[layerConfig.layerName] = new SortedDictionary<float, int>();
-                }
+                    // If the layer doesn't exist in the dictionary yet, add it
+                    if (!layers.ContainsKey(layerConfig.layerName))
+                    {
+                        layers[layerConfig.layerName] = new SortedDictionary<float, int>();
+                    }
 
-                // Iterate over all minThresholds of the current layer config
-                foreach (var minThreshold in layerConfig.minThresholds)
-                {
-                    // Add the minThreshold and the index of the current resource config to the dictionary
-                    layers[layerConfig.layerName][minThreshold] = i;
-                }
+                    // Iterate over all minThresholds of the current layer config
+                    foreach (var minThreshold in layerConfig.minThresholds)
+                    {
+                        // Add the minThreshold and the index of the current resource config to the dictionary
+                        layers[layerConfig.layerName][minThreshold] = i;
+                    }
 
-                // Store the keys of the dictionary in a separate list
-                layerThresholds[layerConfig.layerName] = layers[
-                    layerConfig.layerName
-                ].Keys.ToList();
+                    // Store the keys of the dictionary in a separate list
+                    layerThresholds[layerConfig.layerName] = layers[
+                        layerConfig.layerName
+                    ].Keys.ToList();
+                }
             }
         }
     }
 
-    public List<float> GetNoise(FastNoiseSIMDUnity noiseGenerator, Vector3Int origin, int chunkSize)
+    public List<Resource> NoiseToResources(List<float> noiseValues, LayerName layerName)
     {
-        // Scale the input coordinates
-        int xStart = (int)(origin.x);
-        int yStart = (int)(origin.y);
-        int zStart = (int)(origin.z);
-        int xSize = (int)(chunkSize);
-        int ySize = (int)(chunkSize);
+        // Get the list of indices corresponding to the noise values
+        List<int> indices = NoiseToIndices(noiseValues, layerName);
 
-        // Generate the noise for the chunk
-        List<float> noiseSet = noiseGenerator.GetNoiseSet(xStart, yStart, zStart, xSize, ySize, 1);
-        return noiseSet;
+        // Convert the indices to resources
+        List<Resource> resources = IndicesToResources(indices);
+
+        return resources;
     }
 
     public int NoiseToIndex(LayerName layerName, float noise)
@@ -199,5 +209,17 @@ public class ResourceDatabase : ScriptableObject
 
         // Return the list of Resources
         return resources;
+    }
+
+    public void AddGenerator(LayerName layer, FastNoiseSIMDUnity gen)
+    {
+        // Add the generator to the layerdata list
+        noiseGenerators.Add(new LayerData { layerName = layer, generator = gen });
+    }
+
+    public FastNoiseSIMDUnity GetGenerator(LayerName layer)
+    {
+        // Get the generator for the layer
+        return noiseGenerators.FirstOrDefault(ng => ng.layerName == layer).generator;
     }
 }

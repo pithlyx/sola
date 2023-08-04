@@ -17,6 +17,7 @@ MonoBehaviour:
   icon: {fileID: -671284235, guid: 7267c137f2b35ff4fa1a508b4902e2f6, type: 3}
   materialCosts: []
   operationCost: 1
-  canHarvest: 1
   resourceName: Aluminum
+  canHarvest: 1
   tile: {fileID: 11400000, guid: 506211235056afa40b9acaede104e168, type: 2}
+  minHarvestLevel: 0

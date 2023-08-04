@@ -10,10 +10,11 @@ public class BuildingManager : MonoBehaviour
     public BuildingDatabase buildingDatabase;
     public Tilemap buildingLayer;
     public Tilemap overlayLayer;
-    public LayerGenerator chunkGenerator;
+    public TerrainEngine terrainEngine;
     public Dictionary<BuildingDatabase.BuildingGroup, GameObject> buildingGroupGameObjects;
     public Dictionary<Vector3Int, Building> buildings;
     public Dictionary<string, int> buildingTypeIndexes;
+    public LayerName currentLayer = LayerName.Terrain;
 
     public int resourceLayerIndex = 1;
 
@@ -29,14 +30,14 @@ public class BuildingManager : MonoBehaviour
         BuildingDatabase buildingDatabase,
         Tilemap buildingLayer,
         Tilemap overlayLayer,
-        LayerGenerator chunkGenerator
+        TerrainEngine terrainEngine
     )
     {
         this.itemDatabase = itemDatabase;
         this.buildingDatabase = buildingDatabase;
         this.buildingLayer = buildingLayer;
         this.overlayLayer = overlayLayer;
-        this.chunkGenerator = chunkGenerator;
+        this.terrainEngine = terrainEngine;
     }
 
     public void PlaceTile(Tilemap tileMap, Vector3Int position, TileBase tileBase)

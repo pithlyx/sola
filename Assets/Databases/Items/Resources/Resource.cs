@@ -9,4 +9,5 @@ public class Resource : Item
     public string resourceName;
     public bool canHarvest;
     public TileBase tile;
+    public int minHarvestLevel;
 }
