@@ -54,15 +54,16 @@ public class LayerGenerator : MonoBehaviour
         );
         // Get a list of chunks to generate
         List<Vector3Int> chunkOrigins = GetChunksToGenerate();
-        // For each chunk origin in the list, generate it
+        Debug.Log($"Generating {chunkOrigins.Count} chunks");
+        Debug.Log($"Chunk origins: {string.Join(", ", chunkOrigins)}");
         foreach (Vector3Int origin in chunkOrigins)
         {
-            // Generate the chunk
-            Chunk chunk = GenerateChunk(origin, currentlayer);
-            // Add the chunk to the loaded chunks dictionary
-            loadedChunks[origin] = chunk;
+            // Generate the chunk at the given origin
+            Chunk newChunk = GenerateChunk(origin, currentlayer);
+            // Add the chunk to the dictionary of loaded chunks
+            loadedChunks[origin] = newChunk;
+            DisplayChunk(newChunk);
         }
-        DisplayLoadedChunks();
     }
 
     public List<Vector3Int> GetChunksToGenerate()
@@ -124,12 +125,12 @@ public class LayerGenerator : MonoBehaviour
         List<int> resourceIndices = resourceDatabase.NoiseToIndices(noiseSet, layer);
 
         // Create a new Chunk at the given position with the given resource indices
-        Chunk chunk = new Chunk(chunkSize, chunkPosition, resourceIndices);
-
-        return chunk;
+        Chunk newChunk = new Chunk(chunkSize, chunkPosition, resourceIndices);
+        DisplayChunk(newChunk);
+        return newChunk;
     }
 
-    public void DisplayChunkTiles(Chunk chunk)
+    public void DisplayChunk(Chunk chunk)
     {
         // Get the resources for the tile indices
         List<Resource> resources = resourceDatabase.IndicesToResources(chunk.resourceIndices);
@@ -161,17 +162,6 @@ public class LayerGenerator : MonoBehaviour
                 // Set the tile at the current tile position
                 tilemap.SetTile(tilePosition, tile);
             }
-        }
-    }
-
-    public void DisplayLoadedChunks()
-    {
-        // Get the list of loaded chunks
-        List<Chunk> chunks = loadedChunks.Values.ToList();
-        // For each chunk in the list, display its tiles
-        foreach (Chunk chunk in chunks)
-        {
-            DisplayChunkTiles(chunk);
         }
     }
 }
