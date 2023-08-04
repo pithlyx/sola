@@ -1323,7 +1323,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245806761}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34997e82e6694944686934e2e0c17092, type: 3}
   m_Name: 
@@ -1338,10 +1338,12 @@ MonoBehaviour:
     layer: 1
   chunkSize: 16
   defaultTile: {fileID: 11400000, guid: ac1844c9c682ddc4dbd8b79e489631b1, type: 2}
-  renderPadding: 2
+  chunkPadding: 2
+  currentCameraPosition: {x: 0, y: 0, z: 0}
+  lastCameraPosition: {x: 0, y: 0, z: 0}
+  currentCameraChunk: {x: 0, y: 0, z: 0}
+  lastCameraChunk: {x: 0, y: 0, z: 0}
   currentlayer: 0
-  currentChunkPosition: {x: 0, y: 0, z: 0}
-  lastChunkPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1250373366
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,6 +1426,7 @@ GameObject:
   - component: {fileID: 1285400538}
   - component: {fileID: 1285400537}
   - component: {fileID: 1285400539}
+  - component: {fileID: 1285400540}
   m_Layer: 0
   m_Name: GOD
   m_TagString: Untagged
@@ -1474,6 +1477,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 1250373369}
   debugText: {fileID: 330533627}
+--- !u!114 &1285400540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285400536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61ea243b9dd6a0144aafed8613a4c51d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 1905057404}
+  defaultResource: {fileID: 11400000, guid: 386482621c6f2b5488e5f7c1c95e1442, type: 2}
+  mainCamera: {fileID: 519420031}
+  chunkSize: 16
+  generationRadius: 3
 --- !u!1 &1555791217
 GameObject:
   m_ObjectHideFlags: 0
