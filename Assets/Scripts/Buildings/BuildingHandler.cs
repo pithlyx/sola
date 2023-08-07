@@ -7,17 +7,17 @@ public class BuildingHandler : MonoBehaviour
 {
     public KeyCode rotateKey = KeyCode.R; // The key to rotate the building
     private BuildingManager buildingManager;
-    private BuildingDatabase.BuildingData? selectedBuilding; // Made this nullable
-    private Dictionary<BuildingDatabase.BuildingGroup, int> lastSelectedBuildingIndex =
-        new Dictionary<BuildingDatabase.BuildingGroup, int>();
+    private BuildingData? selectedBuilding; // Made this nullable
+    private Dictionary<BuildingGroup, int> lastSelectedBuildingIndex =
+        new Dictionary<BuildingGroup, int>();
     public IPlacementLogic currentPlacementLogic;
-    private Dictionary<BuildingDatabase.BuildingGroup, IPlacementLogic> placementLogicByGroup;
+    private Dictionary<BuildingGroup, IPlacementLogic> placementLogicByGroup;
     public Building ghostBuilding; // The "ghost" building that follows the cursor
     public Vector3Int cursorPosition; // The current cursor position
     public Vector3Int lastCursorPosition; // Store the last cursor position
     public int rotationIndex = 0; // Store the current rotation index
     public int lastRotationIndex = 0; // Store the last rotation index
-    private bool updated = false;
+    public int relativeCursorRotation = 0; // Store the relative cursor rotation
 
     private void Start()
     {
@@ -28,16 +28,16 @@ public class BuildingHandler : MonoBehaviour
         }
 
         // Initialize the placement logic for each group
-        placementLogicByGroup = new Dictionary<BuildingDatabase.BuildingGroup, IPlacementLogic>
+        placementLogicByGroup = new Dictionary<BuildingGroup, IPlacementLogic>
         {
-            { BuildingDatabase.BuildingGroup.None, new DefaultPlacementLogic() },
-            { BuildingDatabase.BuildingGroup.Extractor, new ExtractorPlacementLogic() },
-            { BuildingDatabase.BuildingGroup.Conveyor, new ConveyorPlacementLogic() }
+            { BuildingGroup.None, new DefaultPlacementLogic() },
+            { BuildingGroup.Extractor, new ExtractorPlacementLogic() },
+            { BuildingGroup.Conveyor, new ConveyorPlacementLogic() }
             // Add other BuildingGroup and IPlacementLogic pairs here...
         };
 
         // Set the initial placement logic
-        currentPlacementLogic = placementLogicByGroup[BuildingDatabase.BuildingGroup.None];
+        currentPlacementLogic = placementLogicByGroup[BuildingGroup.None];
     }
 
     private void Update()
@@ -45,8 +45,9 @@ public class BuildingHandler : MonoBehaviour
         cursorPosition = GetCursorPosition();
         if (cursorPosition != lastCursorPosition)
         {
-            updated = false;
+            UpdateGhostObject();
         }
+
         DatabaseSelection();
         if (selectedBuilding.HasValue)
         {
@@ -54,6 +55,7 @@ public class BuildingHandler : MonoBehaviour
             {
                 CreateGhostBuilding();
             }
+            UpdateGhostObject();
             HandleRotation();
             HandleDeselection();
             HandlePlacement();
@@ -61,14 +63,6 @@ public class BuildingHandler : MonoBehaviour
         else
         {
             HandleRemove();
-        }
-
-        if (!updated && ghostBuilding != null)
-        {
-            updated = true;
-            ghostBuilding.transform.position = cursorPosition;
-            ghostBuilding.RotationIndex = rotationIndex;
-            currentPlacementLogic.TrackBuildingToCursor(this, buildingManager, ghostBuilding);
         }
 
         lastCursorPosition = cursorPosition; // Update the last cursor position
@@ -83,18 +77,41 @@ public class BuildingHandler : MonoBehaviour
                 selectedBuilding.Value,
                 "Ghost " + selectedBuilding.Value.name
             );
+            ghostBuilding.transform.position = GetCursorPosition();
             ghostBuilding.RotationIndex = rotationIndex;
-            ghostBuilding.transform.SetParent(this.transform);
+
+            // Set the parent of the ghost building using the helper function
+            GameObject parentObject = buildingManager.GetParentObjectForBuilding(
+                selectedBuilding.Value
+            );
+            if (parentObject != null)
+            {
+                ghostBuilding.transform.SetParent(parentObject.transform);
+            }
         }
     }
 
-    public void HandleRotation()
+    public void UpdateGhostObject()
     {
-        if (Input.GetKeyDown(rotateKey))
+        if (ghostBuilding != null)
         {
-            rotationIndex = (rotationIndex + 1) % 4;
+            ghostBuilding.transform.position = GetCursorPosition();
             ghostBuilding.RotationIndex = rotationIndex;
-            updated = false;
+            currentPlacementLogic.TrackBuildingToCursor(this, buildingManager, ghostBuilding);
+        }
+    }
+
+    public void HandleRotation(int newIndex = -1)
+    {
+        if (
+            Input.GetKeyDown(rotateKey)
+            || (newIndex != -1 && newIndex != rotationIndex && newIndex < 3)
+        )
+        {
+            rotationIndex = (newIndex == -1) ? (rotationIndex + 1) % 4 : newIndex;
+
+            ghostBuilding.RotationIndex = rotationIndex;
+            UpdateGhostObject();
         }
     }
 
@@ -103,8 +120,7 @@ public class BuildingHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonUp(1))
         {
             DeselectBuilding();
-            buildingManager.ResetTile(buildingManager.overlayLayer, cursorPosition);
-            updated = false;
+            buildingManager.overlayLayer.ClearAllTiles();
         }
     }
 
@@ -112,9 +128,44 @@ public class BuildingHandler : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            currentPlacementLogic.PlaceBuilding(this, buildingManager, ghostBuilding);
-            updated = false;
+            Building newBuilding = currentPlacementLogic.PlaceBuilding(
+                this,
+                buildingManager,
+                ghostBuilding
+            );
+            if (newBuilding != null)
+            {
+                Debug.Log(
+                    "New building:\n"
+                        + newBuilding
+                        + "\n Building Location"
+                        + newBuilding.Location
+                        + "\nCursor position:"
+                        + cursorPosition
+                        + "\nRotation index:"
+                        + rotationIndex
+                );
+                Dictionary<Direction, Building> adjacentBuildings =
+                    buildingManager.GetAdjacentBuildings(newBuilding);
+                Debug.Log(
+                    "Adjacent buildings:\nCount:"
+                        + adjacentBuildings.Count
+                        + "\nBuildings:\n"
+                        + string.Join(
+                            "\n",
+                            adjacentBuildings
+                                .Select(kvp => kvp.Key + ": " + kvp.Value.name)
+                                .ToArray()
+                        )
+                );
+                UpdateGhostObject();
+            }
         }
+    }
+
+    public void MakeParent(Building building)
+    {
+        building.transform.SetParent(this.transform);
     }
 
     public void HandleRemove()
@@ -122,7 +173,7 @@ public class BuildingHandler : MonoBehaviour
         if (Input.GetMouseButton(1) && ghostBuilding == null)
         {
             currentPlacementLogic.RemoveBuilding(buildingManager, GetCursorPosition());
-            updated = false;
+            UpdateGhostObject();
         }
     }
 
@@ -146,16 +197,12 @@ public class BuildingHandler : MonoBehaviour
 
     public void DatabaseSelection()
     {
-        foreach (
-            BuildingDatabase.BuildingGroupHotkey groupHotkey in buildingManager
-                .buildingDatabase
-                .groupHotkeys
-        )
+        foreach (BuildingGroupHotkey groupHotkey in buildingManager.buildingDatabase.groupHotkeys)
         {
             if (Input.GetKeyDown(groupHotkey.hotkey))
             {
-                updated = false;
-                List<BuildingDatabase.BuildingData> buildingsInGroup =
+                UpdateGhostObject();
+                List<BuildingData> buildingsInGroup =
                     buildingManager.buildingDatabase.GetBuildingsByGroup(groupHotkey.group);
                 if (buildingsInGroup.Count > 0)
                 {
@@ -197,9 +244,9 @@ public class BuildingHandler : MonoBehaviour
         }
     }
 
-    public void ChangePlacementStrategy(BuildingDatabase.BuildingData buildingData)
+    public void ChangePlacementStrategy(BuildingData buildingData)
     {
-        BuildingDatabase.BuildingGroup group = buildingData.group;
+        BuildingGroup group = buildingData.group;
         if (placementLogicByGroup.ContainsKey(group))
         {
             currentPlacementLogic = placementLogicByGroup[group];
@@ -209,7 +256,7 @@ public class BuildingHandler : MonoBehaviour
             Debug.LogWarning(
                 $"No placement strategy defined for group {group}. Using default strategy."
             );
-            currentPlacementLogic = placementLogicByGroup[BuildingDatabase.BuildingGroup.None];
+            currentPlacementLogic = placementLogicByGroup[BuildingGroup.None];
         }
     }
 

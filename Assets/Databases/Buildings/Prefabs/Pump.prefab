@@ -44,29 +44,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5999370ed8839d848a9e3e6c5f9f54f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: 
-  icon: {fileID: 0}
-  Sprite: {fileID: 0}
-  Animated: {fileID: 0}
-  Active: 0
-  rotationLocked: 0
-  defaultRotationIndex: 0
-  RotationIndex: 0
-  rotationMatrix:
-    e00: 1
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 1
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 1
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 1
-  inOuts: []
+  BuildingSettings:
+    RotationLocked: 0
+    RotationIndex: 0
+    level: 0
+    Active: 0
+  buildingData:
+    name: 
+    group: 0
+    buildingPrefab: {fileID: 0}
+    StaticTile: {fileID: 0}
+    AnimTile: {fileID: 0}
+    Icon: {fileID: 0}
+    levels: []
+    canRotate: 0
+    defaultRotationIndex: 0
+    defaultPorts:
+      NorthConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      EastConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      SouthConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      WestConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}

@@ -5,46 +5,54 @@ using UnityEngine.Tilemaps;
 public abstract class Building : MonoBehaviour
 {
     [Header("Base")]
-    public BuildingSettings BuildingSettings; // Stores the default building metadata
-    public BuildingDatabase.BuildingData buildingData; // Stores the data for the building from the database
+    public BuildingInfo buildingInfo; // Stores the default building information
+    public BuildingData buildingData; // Stores the data for the building from the database
 
-    // Method to create a copy of the building
+    [Header("Ports")]
+    [SerializeField]
+    private PortCollection _portCollection; // Stores the port information for the building
+    public PortCollection Ports
+    {
+        get { return _portCollection; }
+        set { _portCollection = value; }
+    }
+
+    public LayerName operationLayer;
+
     public virtual Building Clone(string name = null)
     {
         // Create a new building with the name for the game object
         Building newBuilding = Instantiate(this, this.transform.position, this.transform.rotation);
         // name the game object
         newBuilding.gameObject.name = name ?? this.gameObject.name;
+
+        newBuilding.Ports = new PortCollection(buildingData.portDirections);
         // Return the new building
         return newBuilding;
     }
 
-    public Vector3Int GetBuildingLocation()
+    public Vector3Int Location
     {
-        return Vector3Int.FloorToInt(transform.position);
-    }
-
-    public void SetBuildingLocation(Vector3Int location)
-    {
-        transform.position = location;
+        get { return Vector3Int.FloorToInt(transform.position); }
+        set { transform.position = value; }
     }
 
     public int RotationIndex
     {
-        get { return BuildingSettings.RotationIndex; }
+        get { return buildingInfo.RotationIndex; }
         set
         {
-            BuildingSettings.RotationIndex = value % 4;
-            transform.rotation = Quaternion.Euler(0, 0, -90 * BuildingSettings.RotationIndex);
+            buildingInfo.RotationIndex = value % 4;
+            transform.rotation = Quaternion.Euler(0, 0, -90 * buildingInfo.RotationIndex);
         }
     }
     public bool IsActive
     {
-        get { return BuildingSettings.Active; }
-        set { BuildingSettings.Active = value; }
+        get { return buildingInfo.Active; }
+        set { buildingInfo.Active = value; }
     }
 
-    public BuildingDatabase.BuildingGroup GetBuildingGroup()
+    public BuildingGroup GetBuildingGroup()
     {
         return buildingData.group;
     }
@@ -53,6 +61,4 @@ public abstract class Building : MonoBehaviour
     {
         return IsActive ? buildingData.AnimTile : buildingData.StaticTile;
     }
-
-    public virtual void OnPlaced(Item item = null) { }
 }

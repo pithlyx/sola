@@ -45,10 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BuildingSettings:
-    Location: {x: 0, y: 0}
     RotationLocked: 0
-    DefaultRotationIndex: 0
     RotationIndex: 0
+    level: 0
     Active: 1
   buildingData:
     name: 
@@ -60,11 +59,32 @@ MonoBehaviour:
     levels: []
     canRotate: 0
     defaultRotationIndex: 0
-    inOuts: []
-  inOuts:
-  - direction: 1
-    flow: 0
-    item: {fileID: 0}
-  - direction: 3
-    flow: 1
-    item: {fileID: 0}
+    defaultPorts:
+      NorthConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      EastConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      SouthConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      WestConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}

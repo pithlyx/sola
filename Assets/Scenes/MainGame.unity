@@ -557,10 +557,11 @@ MonoBehaviour:
     zoomOutKey: 45
   moveSpeed: 10
   speedMult: 3
-  dragSpeed: 10
-  zoomSpeed: 10
   minZoom: 4
   maxZoom: 100
+  zoomSpeed: 10
+  canDrag: 0
+  dragSpeed: 10
 --- !u!1 &531849503
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,6 +1080,7 @@ MonoBehaviour:
   lastCursorPosition: {x: 0, y: 0, z: 0}
   rotationIndex: 0
   lastRotationIndex: 0
+  relativeCursorRotation: 0
 --- !u!4 &1110797119
 Transform:
   m_ObjectHideFlags: 0
@@ -1111,7 +1113,7 @@ MonoBehaviour:
   buildingLayer: {fileID: 531849506}
   overlayLayer: {fileID: 1688720702}
   terrainEngine: {fileID: 1245806764}
-  currentLayer: 0
+  currentLayer: 1
   resourceLayerIndex: 0
 --- !u!1 &1245806761
 GameObject:
@@ -1934,8 +1936,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -72668963
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}

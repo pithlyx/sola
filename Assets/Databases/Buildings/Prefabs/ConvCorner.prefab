@@ -44,49 +44,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d7bbcd7e68cc64f82c16bdbf1dcb72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSettings:
-    buildingName: 
-    icon: {fileID: 0}
-    Sprite: {fileID: 0}
-    Animated: {fileID: 0}
-    Active: 0
-    rotationLocked: 0
-    defaultRotationIndex: 0
+  BuildingSettings:
+    RotationLocked: 0
     RotationIndex: 0
-    rotationMatrix:
-      e00: 0
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 0
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 0
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 0
-  inOuts:
-  - direction: 0
-    flow: 1
-    itemType: 0
-    resource: {fileID: 0}
-    item: {fileID: 0}
-  - direction: 1
-    flow: 0
-    itemType: 0
-    resource: {fileID: 0}
-    item: {fileID: 0}
-  optionalSettings:
-    hasHealth: 0
-    health: 0
-    lockRotation: 0
-    RequiresPower: 0
-    RequiresWater: 0
-    RequiresWorkers: 0
-    RequiresInput: 0
-    RequiresOutput: 0
+    level: 0
+    Active: 0
+  buildingData:
+    name: 
+    group: 0
+    buildingPrefab: {fileID: 0}
+    StaticTile: {fileID: 0}
+    AnimTile: {fileID: 0}
+    Icon: {fileID: 0}
+    levels: []
+    canRotate: 0
+    defaultRotationIndex: 0
+    defaultPorts:
+      NorthConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      EastConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      SouthConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}
+      WestConfig:
+        canConnect: 0
+        connectionType: 0
+        flowType: 0
+        maxFlowRate: 0
+        flowRate: 0
+        connectedBuilding: {fileID: 0}

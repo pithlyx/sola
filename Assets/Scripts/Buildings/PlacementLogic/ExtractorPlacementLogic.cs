@@ -3,80 +3,51 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ExtractorPlacementLogic : IPlacementLogic
+public class ExtractorPlacementLogic : DefaultPlacement
 {
-    public void TrackBuildingToCursor(
+    public override Building PlaceBuilding(
         BuildingHandler handler,
         BuildingManager manager,
         Building ghostBuilding
     )
     {
-        // Remove the building's tile from previous position
-        manager.ResetTile(manager.overlayLayer, handler.lastCursorPosition);
-        // Set the Overlay tilemap to display the selected building's sprite
-        manager.PlaceTile(manager.overlayLayer, handler.cursorPosition, ghostBuilding.GetTile());
-        // Set the tiles rotation to the current rotation index
-        manager.RotateTile(manager.overlayLayer, handler.cursorPosition, handler.rotationIndex);
-    }
+        // First, do the common placement logic
+        var newBuilding = base.PlaceBuilding(handler, manager, ghostBuilding);
 
-    public void PlaceBuilding(
-        BuildingHandler handler,
-        BuildingManager manager,
-        Building ghostBuilding
-    )
-    {
-        // Check if a building is already in that location
-        if (!manager.CheckPosition(handler.cursorPosition))
+        if (newBuilding != null)
         {
-            return;
+            // Then, do the extractor-specific logic
+            // get the generator for the operating layer
+            FastNoiseSIMDUnity noiseGenerator = ResourceDatabase.Instance.GetGenerator(
+                newBuilding.operationLayer
+            );
+            // get the noise value for the building's position
+            List<float> noiseSet = noiseGenerator.GetNoiseSet(
+                handler.cursorPosition.x,
+                handler.cursorPosition.y,
+                0,
+                1,
+                1,
+                1
+            );
+            // get the resource for the noise from the database
+            Resource resource = ResourceDatabase.Instance.NoiseToResource(
+                noiseSet[0],
+                newBuilding.operationLayer
+            );
+            Debug.Log("Resource: " + resource.resourceName);
+            // set the building's output items to the resource
+            foreach (Port port in newBuilding.Ports.AllPorts)
+            {
+                // Debug.Log("Iterating Port with Flow: " + port.PortFlow);
+                if (port.PortFlow == PortFlow.Out)
+                {
+                    port.CurrentItem = resource;
+                }
+                Debug.Log("Port Item: " + port.CurrentItem.itemName);
+            }
         }
-        // Remove the building's tile from the overlay layer
-        manager.ResetTile(manager.overlayLayer, handler.cursorPosition);
-        // Place the building's tile on the building layer
-        manager.PlaceTile(manager.buildingLayer, handler.cursorPosition, ghostBuilding.GetTile());
-        // Set the tiles rotation to the current rotation index
-        manager.RotateTile(manager.buildingLayer, handler.cursorPosition, handler.rotationIndex);
-        int buildingIndex = manager.GetNewBuildingIndex(ghostBuilding.buildingData.name);
-        // Create a copy of the ghost building
-        Building newBuilding = ghostBuilding.Clone(ghostBuilding.buildingData.name + buildingIndex);
-        // Use a Switch statement to determine the resource layer index based on building name
-        int resourceLayerIndex = 0;
-        switch (newBuilding.buildingData.name)
-        {
-            case "Pump":
-                resourceLayerIndex = 0;
-                break;
-            case "Mine":
-                resourceLayerIndex = 1;
-                break;
-            default:
-                resourceLayerIndex = 1;
-                break;
-        }
-        // Create a Vector3Int for the resource location with the z value set to the resource layer index
-        Vector3Int resourceLocation = new Vector3Int(
-            handler.cursorPosition.x,
-            handler.cursorPosition.y,
-            resourceLayerIndex
-        );
-        // Add the building to the buildings dictionary
-        manager.buildings.Add(handler.cursorPosition, newBuilding);
-    }
 
-    public void RemoveBuilding(BuildingManager manager, Vector3Int cursorPosition)
-    {
-        if (manager.buildings.ContainsKey(cursorPosition))
-        {
-            // Get the building from the buildings dictionary
-            Building buildingToRemove = manager.buildings[cursorPosition];
-            // Remove the building's tile from the tilemap
-            manager.ResetTile(manager.buildingLayer, cursorPosition);
-
-            // Remove the building from the buildings dictionary
-            manager.buildings.Remove(cursorPosition);
-
-            // Destroy the building's game object
-            GameObject.Destroy(buildingToRemove.gameObject);
-        }
+        return newBuilding;
     }
 }

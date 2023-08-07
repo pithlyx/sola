@@ -3,63 +3,16 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 
+[System.Serializable]
+public struct BuildingGroupHotkey
+{
+    public BuildingGroup group;
+    public KeyCode hotkey;
+}
+
 [CreateAssetMenu(fileName = "BuildingDatabase", menuName = "Database/BuildingDatabase", order = 1)]
 public class BuildingDatabase : ScriptableObject
 {
-    public enum BuildingGroup
-    {
-        None,
-        Extractor,
-        Conveyor,
-        BasicCrafting,
-        AdvancedCrafting,
-        Power,
-        Storage,
-        Research,
-        Other
-    }
-
-    [System.Serializable]
-    public struct BuildingLevelData
-    {
-        public float operationRate; // The amount of operations per second at this level
-        public List<Item> Items; // The items that can be crafted at this level
-        public List<MaterialCost> buildCost; // The cost to build or upgrade to this level
-
-        [Header("Fuel")]
-        public bool requiresFuel; // Whether or not the building requires fuel to operate
-        public Item fuelRequired; // The fuel required to operate the building
-        public float maxStock; // The maximum amount of "fuel" the building can hold
-        public int fuelStock; // The amount of "fuel" the building has
-        public float operationCost; // The fuel cost of a single operation
-    }
-
-    [System.Serializable]
-    public struct BuildingData
-    {
-        public string name; // The name of the building
-        public BuildingGroup group; // The group the building belongs to
-        public Building buildingPrefab;
-        public TileBase StaticTile; // The static tile for the building
-        public TileBase AnimTile; // The animated tile for the building
-        public Sprite Icon; // The icon for the building
-        public List<BuildingLevelData> levels; // The data for each level of the building
-
-        [Header("Rotation")]
-        public bool canRotate; // Whether or not the building can be rotated
-        public int defaultRotationIndex; // The default rotation of the building
-
-        [Header("Ports")]
-        public Ports defaultPorts; // The default port for the building
-    }
-
-    [System.Serializable]
-    public struct BuildingGroupHotkey
-    {
-        public BuildingGroup group;
-        public KeyCode hotkey;
-    }
-
     public List<BuildingData> allBuildings;
     public List<BuildingGroupHotkey> groupHotkeys; // The hotkeys for each building group
 

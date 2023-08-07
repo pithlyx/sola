@@ -92,6 +92,17 @@ public class ResourceDatabase : ScriptableObject
         return resources;
     }
 
+    public Resource NoiseToResource(float noiseValue, LayerName layerName)
+    {
+        // Get the index corresponding to the noise value
+        int index = NoiseToIndex(layerName, noiseValue);
+
+        // Convert the index to a resource
+        Resource resource = IndexToResource(index);
+
+        return resource;
+    }
+
     public int NoiseToIndex(LayerName layerName, float noise)
     {
         // Check if the layers dictionary contains the layerName
@@ -112,7 +123,17 @@ public class ResourceDatabase : ScriptableObject
         // that is the bitwise complement of the next larger element
         if (index < 0)
         {
-            index = ~index - 1;
+            index = ~index;
+            if (index == 0)
+            {
+                // If the noise value is smaller than all elements in the list, return the index of the smallest element
+                return thresholds[thresholdKeys[0]];
+            }
+            else
+            {
+                // Otherwise, return the index of the next smaller element
+                index = index - 1;
+            }
         }
 
         // Check if a suitable threshold was found

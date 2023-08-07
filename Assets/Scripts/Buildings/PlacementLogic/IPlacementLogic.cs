@@ -11,6 +11,10 @@ public interface IPlacementLogic
         BuildingManager manager,
         Building selectedBuilding
     );
-    void PlaceBuilding(BuildingHandler handler, BuildingManager manager, Building ghostBuilding);
+    Building PlaceBuilding(
+        BuildingHandler handler,
+        BuildingManager manager,
+        Building ghostBuilding
+    );
     void RemoveBuilding(BuildingManager manager, Vector3Int cursorPosition);
 }

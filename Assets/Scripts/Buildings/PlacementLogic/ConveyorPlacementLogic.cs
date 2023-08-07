@@ -3,60 +3,56 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ConveyorPlacementLogic : IPlacementLogic
+public class ConveyorPlacementLogic : DefaultPlacement
 {
-    public void TrackBuildingToCursor(
-        BuildingHandler handler,
-        BuildingManager manager,
-        Building ghostBuilding
-    )
-    {
-        // Remove the building's tile from previous position
-        manager.ResetTile(manager.overlayLayer, handler.lastCursorPosition);
-        // Set the Overlay tilemap to display the selected building's sprite
-        manager.PlaceTile(manager.overlayLayer, handler.cursorPosition, ghostBuilding.GetTile());
-        // Set the tiles rotation to the current rotation index
-        manager.RotateTile(manager.overlayLayer, handler.cursorPosition, handler.rotationIndex);
-    }
+    Vector3Int initialPlacementDirection = Vector3Int.zero; // Direction of the initial placement
 
-    public void PlaceBuilding(
+    public override Building PlaceBuilding(
         BuildingHandler handler,
         BuildingManager manager,
         Building ghostBuilding
     )
     {
-        // Check if a building is already in that location
-        if (!manager.CheckPosition(handler.cursorPosition))
+        // Update Ghost Building Before Placement
+        Vector3Int direction = handler.cursorPosition - handler.lastCursorPosition;
+
+        // If this is the first conveyor, save the initial placement direction
+        if (initialPlacementDirection == Vector3Int.zero)
         {
-            return;
+            initialPlacementDirection = direction;
         }
-        // Remove the building's tile from the overlay layer
-        manager.ResetTile(manager.overlayLayer, handler.cursorPosition);
-        // Place the building's tile on the building layer
-        manager.PlaceTile(manager.buildingLayer, handler.cursorPosition, ghostBuilding.GetTile());
-        // Set the tiles rotation to the current rotation index
-        manager.RotateTile(manager.buildingLayer, handler.cursorPosition, handler.rotationIndex);
-        int buildingIndex = manager.GetNewBuildingIndex(ghostBuilding.buildingData.name);
-        // Create a copy of the ghost building
-        Building newBuilding = ghostBuilding.Clone(ghostBuilding.buildingData.name + buildingIndex);
-        // Add the building to the buildings dictionary
-        manager.buildings.Add(handler.cursorPosition, newBuilding);
+
+        // Set the rotation based on the cursor movement direction
+        handler.rotationIndex = GetRotationIndex(direction, initialPlacementDirection);
+        handler.HandleRotation(handler.rotationIndex);
+
+        // Use the base class's PlaceBuilding method place the updated ghost building
+        var newBuilding = base.PlaceBuilding(handler, manager, ghostBuilding);
+
+        return newBuilding;
     }
 
-    public void RemoveBuilding(BuildingManager manager, Vector3Int cursorPosition)
+    private int GetRotationIndex(Vector3Int direction, Vector3Int initialDirection)
     {
-        if (manager.buildings.ContainsKey(cursorPosition))
+        if (direction == initialDirection)
         {
-            // Get the building from the buildings dictionary
-            Building buildingToRemove = manager.buildings[cursorPosition];
-            // Remove the building's tile from the tilemap
-            manager.ResetTile(manager.buildingLayer, cursorPosition);
-
-            // Remove the building from the buildings dictionary
-            manager.buildings.Remove(cursorPosition);
-
-            // Destroy the building's game object
-            GameObject.Destroy(buildingToRemove.gameObject);
+            // Moving in the same direction as the initial placement
+            return 0;
+        }
+        else if (direction == -initialDirection)
+        {
+            // Moving in the opposite direction of the initial placement
+            return 2;
+        }
+        else if (direction == new Vector3Int(-initialDirection.y, initialDirection.x, 0))
+        {
+            // Moving to the right relative to the initial placement
+            return 1;
+        }
+        else
+        {
+            // Moving to the left relative to the initial placement
+            return 3;
         }
     }
 }

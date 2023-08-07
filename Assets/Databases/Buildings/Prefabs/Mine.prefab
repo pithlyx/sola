@@ -45,12 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cf2c35abd21d3409fe6979ac375743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildingSettings:
-    Location: {x: 0, y: 0}
+  buildingInfo:
     RotationLocked: 0
-    DefaultRotationIndex: 0
     RotationIndex: 0
-    Active: 1
+    level: 0
+    Active: 0
   buildingData:
     name: 
     group: 0
@@ -61,23 +60,33 @@ MonoBehaviour:
     levels: []
     canRotate: 0
     defaultRotationIndex: 0
-    inOuts: []
-  inOuts:
-  - direction: 0
-    flow: 1
-    item: {fileID: 11400000, guid: 25a89037162d88f4c9e6ce1cb10f4ea6, type: 2}
-  - direction: 1
-    flow: 1
-    item: {fileID: 0}
-  - direction: 2
-    flow: 1
-    item: {fileID: 0}
-  - direction: 3
-    flow: 1
-    item: {fileID: 0}
+    portDirections:
+      North:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+      East:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+      South:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+      West:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+  operationLayer: 1
   layerIndex: 1
-  chunkGenerator: {fileID: 0}
-  itemDatabase: {fileID: 11400000, guid: 739cc7ab83bf46045a7c894c3e25b573, type: 2}
 --- !u!212 &-5744550757933850700
 SpriteRenderer:
   m_ObjectHideFlags: 0

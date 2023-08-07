@@ -23,42 +23,37 @@ MonoBehaviour:
     - operationRate: 10
       Items: []
       buildCost: []
-      requiresFuel: 0
-      fuelRequired: {fileID: 0}
-      maxStock: 0
-      fuelStock: 0
-      operationCost: 0
     canRotate: 1
     defaultRotationIndex: 0
-    defaultPorts:
-      NorthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      EastConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      SouthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      WestConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
+    portDirections:
+      North:
+        Direction: 0
+        Flow: 3
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      East:
+        Direction: 1
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 10
+        TransferRate: 0
+        Item: {fileID: 0}
+      South:
+        Direction: 2
+        Flow: 3
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      West:
+        Direction: 3
+        Flow: 1
+        Type: 0
+        MaxTransferRate: 10
+        TransferRate: 0
+        Item: {fileID: 0}
   - name: Mine
     group: 1
     buildingPrefab: {fileID: -5440449108203148797, guid: 900a37d689aad204cba0904271ea07ee, type: 3}
@@ -67,44 +62,43 @@ MonoBehaviour:
     Icon: {fileID: -1028078837742000520, guid: f88be10b0631b764e909d85e69328ca3, type: 3}
     levels:
     - operationRate: 10
-      Items: []
+      Items:
+      - {fileID: 11400000, guid: ff6941641cad9074a9cc25999c02c195, type: 2}
+      - {fileID: 11400000, guid: 386482621c6f2b5488e5f7c1c95e1442, type: 2}
+      - {fileID: 11400000, guid: 8226e3d8241a34c48a0086797661dc7c, type: 2}
+      - {fileID: 11400000, guid: c53e624d270c6b6419beed158703b759, type: 2}
       buildCost: []
-      requiresFuel: 0
-      fuelRequired: {fileID: 0}
-      maxStock: 0
-      fuelStock: 0
-      operationCost: 0
     canRotate: 1
     defaultRotationIndex: 0
-    defaultPorts:
-      NorthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      EastConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      SouthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      WestConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
+    portDirections:
+      North:
+        Direction: 0
+        Flow: 1
+        Type: 0
+        MaxTransferRate: 10
+        TransferRate: 0
+        Item: {fileID: 0}
+      East:
+        Direction: 1
+        Flow: 1
+        Type: 0
+        MaxTransferRate: 10
+        TransferRate: 0
+        Item: {fileID: 0}
+      South:
+        Direction: 2
+        Flow: 1
+        Type: 0
+        MaxTransferRate: 10
+        TransferRate: 0
+        Item: {fileID: 0}
+      West:
+        Direction: 3
+        Flow: 1
+        Type: 0
+        MaxTransferRate: 10
+        TransferRate: 0
+        Item: {fileID: 0}
   - name: Pump
     group: 1
     buildingPrefab: {fileID: 6984287602380930607, guid: 72b94c46765ed104f841f4801a38a9a2, type: 3}
@@ -113,44 +107,40 @@ MonoBehaviour:
     Icon: {fileID: -146330342605342123, guid: 10763d2b246d7f04298c012d7135080c, type: 3}
     levels:
     - operationRate: 10
-      Items: []
+      Items:
+      - {fileID: 11400000, guid: af8b790fc826bb141ac7bce27be8f631, type: 2}
       buildCost: []
-      requiresFuel: 0
-      fuelRequired: {fileID: 0}
-      maxStock: 0
-      fuelStock: 0
-      operationCost: 0
     canRotate: 1
     defaultRotationIndex: 0
-    defaultPorts:
-      NorthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      EastConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      SouthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      WestConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
+    portDirections:
+      North:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      East:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      South:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      West:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
   - name: Furnace
     group: 3
     buildingPrefab: {fileID: -8705247072445489868, guid: b0a9b60c08cbdae4986536dbffd05430, type: 3}
@@ -158,45 +148,123 @@ MonoBehaviour:
     AnimTile: {fileID: 11400000, guid: 6eb18fe4923b80a4ca8fc46e104a0c06, type: 2}
     Icon: {fileID: -9210460774835628992, guid: 02709fcfc148ade4cab1126335f2517b, type: 3}
     levels:
-    - operationRate: 5
-      Items: []
+    - operationRate: 10
+      Items:
+      - {fileID: 11400000, guid: 2cc891357318c33499fac6a14a13d7c0, type: 2}
       buildCost: []
-      requiresFuel: 1
-      fuelRequired: {fileID: 11400000, guid: 289479612ffa6d142b89b20c5e3a2964, type: 2}
-      maxStock: 100
-      fuelStock: 0
-      operationCost: 2
     canRotate: 0
     defaultRotationIndex: 0
-    defaultPorts:
-      NorthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      EastConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      SouthConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
-      WestConfig:
-        canConnect: 0
-        connectionType: 0
-        flowType: 0
-        maxFlowRate: 0
-        flowRate: 0
-        connectedBuilding: {fileID: 0}
+    portDirections:
+      North:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      East:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      South:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      West:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+  - name: Storage
+    group: 6
+    buildingPrefab: {fileID: -3091850500093117428, guid: 2d90a805564bd1946b9f683cbd63f00a, type: 3}
+    StaticTile: {fileID: 11400000, guid: cfe981110a5955b41b08ca41877b944e, type: 2}
+    AnimTile: {fileID: 11400000, guid: 7ccbbcf5d632d6247831603388707ab7, type: 2}
+    Icon: {fileID: -779286271482919208, guid: acda032be6d17244289815947e20c7c7, type: 3}
+    levels:
+    - operationRate: 0
+      Items: []
+      buildCost: []
+    canRotate: 1
+    defaultRotationIndex: 0
+    portDirections:
+      North:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      East:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      South:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      West:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+  - name: Hub
+    group: 8
+    buildingPrefab: {fileID: -3793240194653411961, guid: 4756955f7e66e0d409f32825841a0c35, type: 3}
+    StaticTile: {fileID: 11400000, guid: a2442d06d3db4144cbeef9e0cb1cc89b, type: 2}
+    AnimTile: {fileID: 11400000, guid: 35ed2c0f4b13ef8409f1574e76cecbb3, type: 2}
+    Icon: {fileID: 9092499492318183364, guid: 4c67aaf3e18efe4469d9d71523f51929, type: 3}
+    levels:
+    - operationRate: 0
+      Items: []
+      buildCost: []
+    canRotate: 1
+    defaultRotationIndex: 0
+    portDirections:
+      North:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      East:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      South:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      West:
+        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
   groupHotkeys:
   - group: 2
     hotkey: 49
@@ -204,5 +272,7 @@ MonoBehaviour:
     hotkey: 50
   - group: 3
     hotkey: 51
-  - group: 8
+  - group: 6
     hotkey: 52
+  - group: 8
+    hotkey: 53
