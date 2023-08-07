@@ -162,6 +162,11 @@ public static class PortExtensions
         {
             return false;
         }
+        // Return false if both ports are InOut
+        if (thisPort.PortFlow == PortFlow.InOut && otherPort.PortFlow == PortFlow.InOut)
+        {
+            return false;
+        }
         // Return if either port is InOut (InOut ports are always compatable)
         if (thisPort.PortFlow == PortFlow.InOut || otherPort.PortFlow == PortFlow.InOut)
         {
@@ -172,6 +177,7 @@ public static class PortExtensions
         {
             return true;
         }
+
         // Return false if none of the above are true
         return false;
     }
@@ -228,5 +234,22 @@ public static class DirectionExtensions
             throw new ArgumentException(
                 "The provided vector does not correspond to a valid direction."
             );
+    }
+}
+
+[System.Serializable]
+public static class BuildingExtensions
+{
+    public static Direction? IsAdjacentTo(this Building buildingA, Building buildingB)
+    {
+        Vector3Int delta = buildingB.Location - buildingA.Location;
+
+        // Check if it's a unit vector in one of the cardinal directions
+        if (Mathf.Abs(delta.x) + Mathf.Abs(delta.y) == 1 && delta.z == 0)
+        {
+            return delta.ToDirection();
+        }
+
+        return null; // Not adjacent
     }
 }

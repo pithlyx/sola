@@ -43,4 +43,15 @@ public class PortCollection
             port.IsBlocked = false;
         }
     }
+
+    public void UpdateAllPorts()
+    {
+        foreach (var port in _ports.Values)
+        {
+            if (port.ConnectionUpdated == false)
+            {
+                port.UpdateConnection();
+            }
+        }
+    }
 }

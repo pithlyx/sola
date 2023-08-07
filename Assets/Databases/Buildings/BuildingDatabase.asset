@@ -27,28 +27,24 @@ MonoBehaviour:
     defaultRotationIndex: 0
     portDirections:
       North:
-        Direction: 0
         Flow: 3
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       East:
-        Direction: 1
         Flow: 0
         Type: 0
         MaxTransferRate: 10
         TransferRate: 0
         Item: {fileID: 0}
       South:
-        Direction: 2
         Flow: 3
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       West:
-        Direction: 3
         Flow: 1
         Type: 0
         MaxTransferRate: 10
@@ -72,28 +68,24 @@ MonoBehaviour:
     defaultRotationIndex: 0
     portDirections:
       North:
-        Direction: 0
         Flow: 1
         Type: 0
         MaxTransferRate: 10
         TransferRate: 0
         Item: {fileID: 0}
       East:
-        Direction: 1
         Flow: 1
         Type: 0
         MaxTransferRate: 10
         TransferRate: 0
         Item: {fileID: 0}
       South:
-        Direction: 2
         Flow: 1
         Type: 0
         MaxTransferRate: 10
         TransferRate: 0
         Item: {fileID: 0}
       West:
-        Direction: 3
         Flow: 1
         Type: 0
         MaxTransferRate: 10
@@ -114,28 +106,24 @@ MonoBehaviour:
     defaultRotationIndex: 0
     portDirections:
       North:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       East:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       South:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       West:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
@@ -156,28 +144,24 @@ MonoBehaviour:
     defaultRotationIndex: 0
     portDirections:
       North:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       East:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       South:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       West:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
@@ -197,28 +181,24 @@ MonoBehaviour:
     defaultRotationIndex: 0
     portDirections:
       North:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       East:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       South:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       West:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
@@ -238,28 +218,58 @@ MonoBehaviour:
     defaultRotationIndex: 0
     portDirections:
       North:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       East:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       South:
-        Direction: 0
         Flow: 0
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       West:
-        Direction: 0
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+  - name: Conveyor Corner
+    group: 2
+    buildingPrefab: {fileID: 0}
+    StaticTile: {fileID: 0}
+    AnimTile: {fileID: 0}
+    Icon: {fileID: 0}
+    levels: []
+    canRotate: 0
+    defaultRotationIndex: 0
+    portDirections:
+      North:
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      East:
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      South:
+        Flow: 0
+        Type: 0
+        MaxTransferRate: 0
+        TransferRate: 0
+        Item: {fileID: 0}
+      West:
         Flow: 0
         Type: 0
         MaxTransferRate: 0

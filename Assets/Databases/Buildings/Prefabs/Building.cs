@@ -19,6 +19,9 @@ public abstract class Building : MonoBehaviour
 
     public LayerName operationLayer;
 
+    // Define the overridable method to set the output items
+    public virtual void SetOutputItems() { }
+
     public virtual Building Clone(string name = null)
     {
         // Create a new building with the name for the game object
@@ -60,5 +63,27 @@ public abstract class Building : MonoBehaviour
     public TileBase GetTile()
     {
         return IsActive ? buildingData.AnimTile : buildingData.StaticTile;
+    }
+
+    public void UpdatePorts()
+    {
+        // Update the ports
+        Ports.UpdateAllPorts();
+    }
+
+    // Method to get ports based on PortFlow
+    public List<Port> GetPortsByFlow(PortFlow portFlow)
+    {
+        List<Port> ports = new List<Port>();
+
+        foreach (Port port in Ports.AllPorts)
+        {
+            if (port.PortFlow == portFlow || port.PortFlow == PortFlow.InOut)
+            {
+                ports.Add(port);
+            }
+        }
+
+        return ports;
     }
 }

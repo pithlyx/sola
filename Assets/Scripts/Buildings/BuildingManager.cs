@@ -90,6 +90,15 @@ public class BuildingManager : MonoBehaviour
         this.terrainEngine = terrainEngine;
     }
 
+    // -------------------> Class Methods <-------------------
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            UpdateBuildingConnections();
+        }
+    }
+
     // -------------------> Tilemap Methods <-------------------
     public void PlaceTile(Tilemap tileMap, Vector3Int position, TileBase tileBase)
     {
@@ -212,39 +221,80 @@ public class BuildingManager : MonoBehaviour
     // -------------------> Building Connection Methods <-------------------
     public bool ConnectBuildings(Building buildingA, Building buildingB)
     {
-        // Calculate the direction from building A to building B
-        Direction directionToB = (buildingB.Location - buildingA.Location).ToDirection();
+        // Check if the buildings are adjacent
+        Direction? directionToB = buildingA.IsAdjacentTo(buildingB);
 
-        // Get the ports from each building in the appropriate direction
-        Port portA = buildingA.Ports.GetPort(directionToB);
-        Port portB = buildingB.Ports.GetPort(directionToB.Opposite());
-
-        // Check if the ports are compatible for connection
-        if (portA.IsCompatableWith(portB) == false)
+        if (directionToB.HasValue)
         {
+            // Buildings are adjacent
+            return ConnectAdjacentBuilding(buildingA, buildingB, directionToB.Value);
+        }
+        else
+        {
+            // Buildings are not adjacent
+            // ??? Implement NonAdjacentBuilding connection ???
             return false;
         }
+    }
 
+    public bool ConnectAdjacentBuilding(
+        Building buildingA,
+        Building buildingB,
+        Direction directionToB
+    )
+    {
+        // Get the ports for each building
+        Port portA = buildingA.Ports.GetPort(directionToB);
+        Port portB = buildingB.Ports.GetPort(directionToB.Opposite());
         // Connect the ports
         ConnectPorts(portA, portB);
-
-        return true;
+        bool connectionSuccessful = portA.UpdateConnection();
+        if (connectionSuccessful) { }
+        return connectionSuccessful;
     }
 
     private void ConnectPorts(Port portA, Port portB)
     {
         portA.ConnectedPort = portB;
-        portA.ConnectionEstablished = true;
+        portA.ConnectionUpdated = false;
         portB.ConnectedPort = portA;
-        portB.ConnectionEstablished = true;
+        portB.ConnectionUpdated = false;
     }
 
     private void DisconnectPorts(Port portA, Port portB)
     {
         portA.ConnectedPort = null;
-        portA.ConnectionEstablished = false;
+        portA.ConnectionUpdated = false;
         portB.ConnectedPort = null;
-        portB.ConnectionEstablished = false;
+        portB.ConnectionUpdated = false;
+    }
+
+    private void UpdateBuildingConnections()
+    {
+        foreach (Building building in buildings.Values)
+        {
+            building.Ports.UpdateAllPorts();
+            building.buildingInfo.Active = true;
+        }
+    }
+
+    public void UpdateConnectedBuildings(Building building)
+    {
+        // First update the placed building itself
+        foreach (var port in building.Ports.AllPorts)
+        {
+            port.UpdateConnection();
+        }
+
+        // Then update all buildings connected to it
+        Dictionary<Direction, Building> adjacentBuildings = GetAdjacentBuildings(building);
+        foreach (Building adjacentBuilding in adjacentBuildings.Values)
+        {
+            foreach (var port in adjacentBuilding.Ports.AllPorts)
+            {
+                port.UpdateConnection();
+            }
+        }
     }
 
     // -------------------> Building Handler Methods <-------------------

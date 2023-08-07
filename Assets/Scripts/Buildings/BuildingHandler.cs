@@ -135,29 +135,10 @@ public class BuildingHandler : MonoBehaviour
             );
             if (newBuilding != null)
             {
-                Debug.Log(
-                    "New building:\n"
-                        + newBuilding
-                        + "\n Building Location"
-                        + newBuilding.Location
-                        + "\nCursor position:"
-                        + cursorPosition
-                        + "\nRotation index:"
-                        + rotationIndex
-                );
-                Dictionary<Direction, Building> adjacentBuildings =
-                    buildingManager.GetAdjacentBuildings(newBuilding);
-                Debug.Log(
-                    "Adjacent buildings:\nCount:"
-                        + adjacentBuildings.Count
-                        + "\nBuildings:\n"
-                        + string.Join(
-                            "\n",
-                            adjacentBuildings
-                                .Select(kvp => kvp.Key + ": " + kvp.Value.name)
-                                .ToArray()
-                        )
-                );
+                if (newBuilding.buildingData.group == BuildingGroup.Conveyor)
+                {
+                    newBuilding.SetOutputItems();
+                }
                 UpdateGhostObject();
             }
         }

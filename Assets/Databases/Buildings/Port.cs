@@ -23,7 +23,7 @@ public class Port
     private bool _isBlocked;
 
     [SerializeField]
-    private bool _isTransfering;
+    private bool _canTransfer;
 
     [SerializeField]
     private Item _currentItem;
@@ -32,7 +32,13 @@ public class Port
     private Port _connectedPort;
 
     [SerializeField]
-    private bool _connectionEstablished;
+    private bool _connectionValid;
+
+    [SerializeField]
+    private bool _connectionChecked;
+
+    [SerializeField]
+    private bool _connectionUpdated;
 
     public Port(PortConfig config)
     {
@@ -41,10 +47,12 @@ public class Port
         MaxTransferRate = config.MaxTransferRate;
         TransferRate = config.TransferRate;
         IsBlocked = false;
-        IsTransfering = false;
+        CanTransfer = false;
         CurrentItem = null;
         ConnectedPort = null;
-        ConnectionEstablished = false;
+        ConnectionValid = false;
+        ConnectionChecked = false;
+        ConnectionUpdated = false;
     }
 
     public PortType PortType
@@ -75,10 +83,10 @@ public class Port
         set => _isBlocked = value;
     }
 
-    public bool IsTransfering
+    public bool CanTransfer
     {
-        get => _isTransfering;
-        set => _isTransfering = value;
+        get => _canTransfer;
+        set => _canTransfer = value;
     }
 
     public Item CurrentItem
@@ -93,24 +101,116 @@ public class Port
         set => _connectedPort = value;
     }
 
-    public bool ConnectionEstablished
+    public bool ConnectionValid
     {
-        get => _connectionEstablished;
-        set => _connectionEstablished = value;
+        get => _connectionValid;
+        set => _connectionValid = value;
     }
 
-    public bool CanTransfer()
+    public bool ConnectionChecked
     {
-        // This method checks if the port can currently transfer items.
-        // It could return false if the port is blocked or if it's not transferring.
-        return !IsBlocked && IsTransfering;
+        get => _connectionChecked;
+        set => _connectionChecked = value;
     }
 
-    public void StartTransfer(Item item)
+    public bool ConnectionUpdated
     {
-        // This method starts a transfer of the specified item.
-        // It sets the currentItem to the specified item and sets isTransfering to true.
-        CurrentItem = item;
-        IsTransfering = true;
+        get => _connectionUpdated;
+        set => _connectionUpdated = value;
+    }
+
+    public bool ValidateConnection()
+    {
+        if (
+            ConnectedPort != null
+            && (ConnectionChecked == false || ConnectedPort.ConnectionChecked == false)
+        )
+        {
+            ConnectionChecked = true;
+            ConnectionUpdated = false;
+            ConnectedPort.ConnectionChecked = true;
+            ConnectedPort.ConnectionUpdated = false;
+            if (this.IsCompatableWith(ConnectedPort))
+            {
+                ConnectionValid = true;
+                ConnectedPort.ConnectionValid = true;
+                return true;
+            }
+            else
+            {
+                ConnectionValid = false;
+                ConnectedPort.ConnectionValid = false;
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public bool UpdateConnection()
+    {
+        if (ConnectionUpdated == true)
+        {
+            return true;
+        }
+
+        if (ValidateConnection())
+        {
+            UpdateItem();
+        }
+        ConnectionUpdated = true;
+        return true;
+    }
+
+    public void UpdateItem()
+    {
+        if (ConnectedPort == null)
+            return;
+
+        if ((PortFlow == PortFlow.Out || PortFlow == PortFlow.InOut) && CurrentItem != null)
+        {
+            if (ConnectedPort.ReceiveItem(CurrentItem))
+            {
+                CanTransfer = true;
+            }
+        }
+
+        if (PortFlow == PortFlow.In || PortFlow == PortFlow.InOut)
+        {
+            CurrentItem = ConnectedPort.SendItem();
+        }
+    }
+
+    public bool ReceiveItem(Item item)
+    {
+        if ((PortFlow == PortFlow.In || PortFlow == PortFlow.InOut) && !IsBlocked)
+        {
+            CurrentItem = item;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public Item SendItem()
+    {
+        if (
+            (PortFlow == PortFlow.Out || PortFlow == PortFlow.InOut)
+            && CurrentItem != null
+            && !IsBlocked
+        )
+        {
+            return CurrentItem;
+        }
+        return null;
+    }
+
+    public void UpdateConnectedPort()
+    {
+        // If this port has a valid connection, update the connected port.
+        if (ConnectedPort != null && ConnectionValid)
+        {
+            ConnectedPort.UpdateConnection();
+        }
     }
 }
