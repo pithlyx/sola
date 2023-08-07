@@ -243,34 +243,34 @@ MonoBehaviour:
         Item: {fileID: 0}
   - name: Conveyor Corner
     group: 2
-    buildingPrefab: {fileID: 0}
-    StaticTile: {fileID: 0}
-    AnimTile: {fileID: 0}
-    Icon: {fileID: 0}
+    buildingPrefab: {fileID: 510803085913266816, guid: 52a2a680b2a5f9e4e9e43a07dec28e42, type: 3}
+    StaticTile: {fileID: 11400000, guid: 3c67b4f9ed654d54c98ac2e5ccc1d742, type: 2}
+    AnimTile: {fileID: 11400000, guid: 396013a0e91c24b4bb710153551da707, type: 2}
+    Icon: {fileID: 608575891148530728, guid: 1bb03a18dadb091499f60cb6111eeded, type: 3}
     levels: []
     canRotate: 0
     defaultRotationIndex: 0
     portDirections:
       North:
-        Flow: 0
+        Flow: 1
         Type: 0
-        MaxTransferRate: 0
+        MaxTransferRate: 10
         TransferRate: 0
         Item: {fileID: 0}
       East:
         Flow: 0
         Type: 0
-        MaxTransferRate: 0
+        MaxTransferRate: 10
         TransferRate: 0
         Item: {fileID: 0}
       South:
-        Flow: 0
+        Flow: 3
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0
         Item: {fileID: 0}
       West:
-        Flow: 0
+        Flow: 3
         Type: 0
         MaxTransferRate: 0
         TransferRate: 0

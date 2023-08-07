@@ -11,7 +11,7 @@ public enum LayerName // LayerGenerator.cs
 {
     // LayerNames for the LayerGenerator
     Terrain,
-    Ore,
+    Ore
 }
 
 [System.Serializable]
