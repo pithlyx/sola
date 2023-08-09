@@ -15,7 +15,7 @@ public class BuildingManager : MonoBehaviour
     public Dictionary<Vector3Int, Building> buildings;
     public Dictionary<string, int> buildingTypeIndexes;
     public LayerName currentLayer = LayerName.Terrain;
-
+    public Building? lastPlacedBuilding = null; // Nullable last placed building
     public int resourceLayerIndex = 1;
 
     private Dictionary<BuildingGroup, Dictionary<string, GameObject>> buildingObjectTree;
@@ -306,7 +306,7 @@ public class BuildingManager : MonoBehaviour
         }
 
         PlaceBuildingTile(handler, ghostBuilding);
-        int buildingIndex = DetermineBuildingIndex(ghostBuilding);
+        int buildingIndex = GetNewBuildingIndex(ghostBuilding.buildingData);
         Building newBuilding = ghostBuilding.Clone(ghostBuilding.buildingData.name + buildingIndex);
         buildings.Add(handler.cursorPosition, newBuilding);
         ParentBuilding(newBuilding, ghostBuilding.buildingData);
@@ -327,12 +327,7 @@ public class BuildingManager : MonoBehaviour
     {
         ResetTile(overlayLayer, handler.cursorPosition);
         PlaceTile(buildingLayer, handler.cursorPosition, ghostBuilding.GetTile());
-        RotateTile(buildingLayer, handler.cursorPosition, handler.rotationIndex);
-    }
-
-    private int DetermineBuildingIndex(Building ghostBuilding)
-    {
-        return GetNewBuildingIndex(ghostBuilding.buildingData);
+        RotateTile(buildingLayer, handler.cursorPosition, ghostBuilding.RotationIndex);
     }
 
     private void ParentBuilding(Building newBuilding, BuildingData buildingData)
@@ -353,5 +348,27 @@ public class BuildingManager : MonoBehaviour
                 $"No parent object found for building: {buildingName} in group: {group}"
             );
         }
+    }
+
+    public void UpdateBuilding(
+        Building building,
+        int? newRotationIndex = null,
+        Vector3Int? newLocation = null
+    )
+    {
+        Vector3Int position = building.Location;
+        ResetTile(buildingLayer, position);
+        if (newRotationIndex != -1)
+        {
+            building.RotationIndex = newRotationIndex.Value;
+        }
+        if (newLocation.HasValue)
+        {
+            buildings.Remove(building.Location);
+            position = newLocation.Value;
+            buildings.Add(building.Location, building);
+        }
+        PlaceTile(buildingLayer, position, building.GetTile());
+        RotateTile(buildingLayer, position, building.RotationIndex);
     }
 }

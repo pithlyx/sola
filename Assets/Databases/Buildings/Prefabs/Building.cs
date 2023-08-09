@@ -5,8 +5,9 @@ using UnityEngine.Tilemaps;
 public abstract class Building : MonoBehaviour
 {
     [Header("Base")]
-    public BuildingInfo buildingInfo; // Stores the default building information
     public BuildingData buildingData; // Stores the data for the building from the database
+    public BuildingInfo buildingInfo; // Stores the building information
+    public BuildingInventory buildingInventory; // Stores the building inventory
 
     [Header("Ports")]
     [SerializeField]
@@ -40,12 +41,37 @@ public abstract class Building : MonoBehaviour
         set { transform.position = value; }
     }
 
+    public int RealRotation
+    {
+        get { return buildingInfo.RealRotationIndex; }
+        set
+        {
+            buildingInfo.RealRotationIndex = value % 4;
+            if (buildingInfo.RealRotationIndex < 0) // Handle negative rotation
+            {
+                buildingInfo.RealRotationIndex += 4;
+            }
+
+            // Adjust the RotationIndex based on the set RealRotation
+            RotationIndex = (buildingInfo.RealRotationIndex - buildingData.DefaultRotation + 4) % 4;
+        }
+    }
+
     public int RotationIndex
     {
         get { return buildingInfo.RotationIndex; }
         set
         {
             buildingInfo.RotationIndex = value % 4;
+            if (buildingInfo.RotationIndex < 0) // Handle negative rotation
+            {
+                buildingInfo.RotationIndex += 4;
+            }
+
+            // Adjust the RealRotation based on the set RotationIndex
+            buildingInfo.RealRotationIndex =
+                (buildingInfo.RotationIndex + buildingData.DefaultRotation) % 4;
+
             transform.rotation = Quaternion.Euler(0, 0, -90 * buildingInfo.RotationIndex);
         }
     }

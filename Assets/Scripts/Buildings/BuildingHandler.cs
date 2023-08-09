@@ -15,7 +15,7 @@ public class BuildingHandler : MonoBehaviour
     public Building ghostBuilding; // The "ghost" building that follows the cursor
     public Vector3Int cursorPosition; // The current cursor position
     public Vector3Int lastCursorPosition; // Store the last cursor position
-    public int rotationIndex = 0; // Store the current rotation index
+    public int relativeRotationIndex = 0; // Store the current rotation index
     public int lastRotationIndex = 0; // Store the last rotation index
     public int relativeCursorRotation = 0; // Store the relative cursor rotation
 
@@ -66,7 +66,7 @@ public class BuildingHandler : MonoBehaviour
         }
 
         lastCursorPosition = cursorPosition; // Update the last cursor position
-        lastRotationIndex = rotationIndex; // Update the last rotation index
+        lastRotationIndex = relativeRotationIndex; // Update the last rotation index
     }
 
     public void CreateGhostBuilding()
@@ -78,7 +78,7 @@ public class BuildingHandler : MonoBehaviour
                 "Ghost " + selectedBuilding.Value.name
             );
             ghostBuilding.transform.position = GetCursorPosition();
-            ghostBuilding.RotationIndex = rotationIndex;
+            ghostBuilding.RotationIndex = relativeRotationIndex;
 
             // Set the parent of the ghost building using the helper function
             GameObject parentObject = buildingManager.GetParentObjectForBuilding(
@@ -96,7 +96,6 @@ public class BuildingHandler : MonoBehaviour
         if (ghostBuilding != null)
         {
             ghostBuilding.transform.position = GetCursorPosition();
-            ghostBuilding.RotationIndex = rotationIndex;
             currentPlacementLogic.TrackBuildingToCursor(this, buildingManager, ghostBuilding);
         }
     }
@@ -105,12 +104,11 @@ public class BuildingHandler : MonoBehaviour
     {
         if (
             Input.GetKeyDown(rotateKey)
-            || (newIndex != -1 && newIndex != rotationIndex && newIndex < 3)
+            || (newIndex != -1 && newIndex != relativeRotationIndex && newIndex < 3)
         )
         {
-            rotationIndex = (newIndex == -1) ? (rotationIndex + 1) % 4 : newIndex;
-
-            ghostBuilding.RotationIndex = rotationIndex;
+            ghostBuilding.RotationIndex =
+                newIndex != -1 ? newIndex : ghostBuilding.RotationIndex + 1;
             UpdateGhostObject();
         }
     }
@@ -126,7 +124,13 @@ public class BuildingHandler : MonoBehaviour
 
     public void HandlePlacement()
     {
-        if (Input.GetMouseButton(0))
+        if (
+            Input.GetMouseButton(0)
+            && (
+                buildingManager.lastPlacedBuilding == null
+                || buildingManager.lastPlacedBuilding.Location != cursorPosition
+            )
+        )
         {
             Building newBuilding = currentPlacementLogic.PlaceBuilding(
                 this,
@@ -135,6 +139,7 @@ public class BuildingHandler : MonoBehaviour
             );
             if (newBuilding != null)
             {
+                buildingManager.lastPlacedBuilding = newBuilding;
                 if (newBuilding.buildingData.group == BuildingGroup.Conveyor)
                 {
                     newBuilding.SetOutputItems();

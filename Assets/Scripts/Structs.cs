@@ -36,6 +36,78 @@ public struct TileData // Chunk.cs
     public Matrix4x4 transformMatrix;
 }
 
+// ----------> Items <----------
+[System.Serializable]
+public enum ItemTag // Item.cs
+{
+    None,
+    Crafted,
+    Resource,
+    Fluid,
+    Power,
+    Fuel,
+    Building
+}
+
+[System.Serializable]
+public struct BuildingInventory
+{
+    public int maxCapacity; // The maximum number of distinct items the inventory can hold
+    public int currentCapacity; // The current number of distinct items in the inventory
+
+    [ShowInInspector]
+    public Dictionary<Item, int> items; // The items and their quantities
+
+    // Initializes the inventory with a given capacity
+    public BuildingInventory(int capacity)
+    {
+        maxCapacity = capacity;
+        currentCapacity = 0;
+        items = new Dictionary<Item, int>();
+    }
+
+    // Adds an item to the inventory, if there's space
+    public bool AddItem(Item item, int quantity)
+    {
+        if (currentCapacity < maxCapacity || items.ContainsKey(item))
+        {
+            if (items.ContainsKey(item))
+            {
+                items[item] += quantity;
+            }
+            else
+            {
+                items[item] = quantity;
+                currentCapacity++;
+            }
+            return true;
+        }
+        return false; // Inventory is full
+    }
+
+    // Removes a specified quantity of an item from the inventory
+    public bool RemoveItem(Item item, int quantity)
+    {
+        if (items.ContainsKey(item) && items[item] >= quantity)
+        {
+            items[item] -= quantity;
+            if (items[item] <= 0)
+            {
+                items.Remove(item);
+                currentCapacity--;
+            }
+            return true;
+        }
+        return false; // Not enough of the item in inventory
+    }
+
+    // Checks if the inventory contains a specific item and quantity
+    public bool Contains(Item item, int quantity)
+    {
+        return items.ContainsKey(item) && items[item] >= quantity;
+    }
+}
+
 // ----------> Buildings <----------
 [System.Serializable]
 public enum BuildingGroup // BuildingDatabase.cs
@@ -52,34 +124,34 @@ public enum BuildingGroup // BuildingDatabase.cs
 }
 
 [System.Serializable]
-public struct BuildingLevelData
+public struct BuildingData // BuildingDatabase.cs
 {
-    public float operationRate;
-    public List<Item> Items;
-    public List<MaterialCost> buildCost;
-}
-
-[System.Serializable]
-public struct BuildingData
-{
+    // Database struct for storing default building data
+    [Header("Building Info")]
     public string name;
     public BuildingGroup group;
     public Building buildingPrefab;
+
+    [Header("Building Visuals")]
     public TileBase StaticTile;
     public TileBase AnimTile;
     public Sprite Icon;
-    public List<BuildingLevelData> levels;
-    public bool canRotate;
-    public int defaultRotationIndex;
-    public PortDirections portDirections; // Ensure this is of type PortDirections, not PortDirection
+    public int DefaultRotation;
+
+    [Header("Building Recipes")]
+    public float operationRate;
+    public List<CraftingRecipe> recipes;
+
+    [Header("Ports")]
+    public PortDirections portDirections;
 }
 
 [System.Serializable]
 public struct BuildingInfo // Building.cs
 {
-    public bool RotationLocked; // Whether the building can be rotated or not
-    public int RotationIndex; // Stores the current rotation index
-    public int level; // The current level of the building
+    public int RotationIndex; // Stores the relative rotation index
+    public int RealRotationIndex; // Stores the real rotation index
+    public int Level; // The current level of the building
     public bool Active; // Whether the building is active or not
 }
 

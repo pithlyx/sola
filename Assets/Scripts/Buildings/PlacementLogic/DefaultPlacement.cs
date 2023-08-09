@@ -16,7 +16,11 @@ public abstract class DefaultPlacement : IPlacementLogic
         // Set the Overlay tilemap to display the selected building's sprite
         manager.PlaceTile(manager.overlayLayer, handler.cursorPosition, ghostBuilding.GetTile());
         // Set the tiles rotation to the current rotation index
-        manager.RotateTile(manager.overlayLayer, handler.cursorPosition, handler.rotationIndex);
+        manager.RotateTile(
+            manager.overlayLayer,
+            handler.cursorPosition,
+            ghostBuilding.RotationIndex
+        );
     }
 
     public virtual Building PlaceBuilding(
